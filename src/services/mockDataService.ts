@@ -41,8 +41,9 @@ const mockDomains: Domain[] = [
   }
 ];
 
-// Mock collections for cartões domain
+// Mock collections for all domains
 const mockCollections: Collection[] = [
+  // Cartões domain collections
   {
     id: 'cartoes-credito',
     name: 'Cartões de Crédito',
@@ -60,6 +61,51 @@ const mockCollections: Collection[] = [
     name: 'Cartões Pré-pago',
     domainId: 'cartoes',
     contracts: []
+  },
+  // Seguros domain collections
+  {
+    id: 'seguros-vida',
+    name: 'Seguros de Vida',
+    domainId: 'seguros',
+    contracts: []
+  },
+  {
+    id: 'seguros-auto',
+    name: 'Seguros Auto',
+    domainId: 'seguros',
+    contracts: []
+  },
+  {
+    id: 'seguros-residencial',
+    name: 'Seguros Residencial',
+    domainId: 'seguros',
+    contracts: []
+  },
+  // Consórcio domain collections
+  {
+    id: 'consorcio-imoveis',
+    name: 'Consórcio Imóveis',
+    domainId: 'consorcio',
+    contracts: []
+  },
+  {
+    id: 'consorcio-veiculos',
+    name: 'Consórcio Veículos',
+    domainId: 'consorcio',
+    contracts: []
+  },
+  // Investimentos domain collections
+  {
+    id: 'fundos-investimento',
+    name: 'Fundos de Investimento',
+    domainId: 'investimentos',
+    contracts: []
+  },
+  {
+    id: 'renda-fixa',
+    name: 'Renda Fixa',
+    domainId: 'investimentos',
+    contracts: []
   }
 ];
 
@@ -68,17 +114,17 @@ const mockQualityRules: QualityRule[] = [
   {
     id: 'qr-001',
     name: 'CPF Validation',
-    description: 'Validates CPF format and check digit',
+    description: 'Validates CPF format and check digit according to Brazilian standards',
     type: 'format_validation',
     severity: 'high' as QualitySeverity,
-    rule: 'cpf_column IS NOT NULL AND LENGTH(cpf_column) = 11',
+    rule: 'cpf_column IS NOT NULL AND LENGTH(cpf_column) = 11 AND cpf_check_digit(cpf_column) = true',
     enabled: true,
     lastExecuted: '2024-01-09T10:30:00Z'
   },
   {
     id: 'qr-002',
     name: 'Email Format Check',
-    description: 'Ensures email addresses follow valid format',
+    description: 'Ensures email addresses follow valid RFC 5322 format',
     type: 'format_validation',
     severity: 'medium' as QualitySeverity,
     rule: 'email_column REGEXP \'^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$\'',
@@ -88,12 +134,72 @@ const mockQualityRules: QualityRule[] = [
   {
     id: 'qr-003',
     name: 'Transaction Amount Range',
-    description: 'Validates transaction amounts are within expected range',
+    description: 'Validates transaction amounts are within expected business range to prevent fraud',
     type: 'range_validation',
     severity: 'critical' as QualitySeverity,
     rule: 'transaction_amount > 0 AND transaction_amount < 1000000',
     enabled: true,
     lastExecuted: '2024-01-09T11:45:00Z'
+  },
+  {
+    id: 'qr-004',
+    name: 'Transaction ID Uniqueness',
+    description: 'Ensures all transaction IDs are unique across the dataset',
+    type: 'uniqueness',
+    severity: 'critical' as QualitySeverity,
+    rule: 'COUNT(DISTINCT transaction_id) = COUNT(*)',
+    enabled: true,
+    lastExecuted: '2024-01-09T08:00:00Z'
+  },
+  {
+    id: 'qr-005',
+    name: 'Merchant Name Completeness',
+    description: 'Checks that merchant names are provided for all approved transactions',
+    type: 'completeness',
+    severity: 'medium' as QualitySeverity,
+    rule: 'CASE WHEN status = \'approved\' THEN merchant_name IS NOT NULL ELSE true END',
+    enabled: true,
+    lastExecuted: '2024-01-09T07:30:00Z'
+  },
+  {
+    id: 'qr-006',
+    name: 'Transaction Date Consistency',
+    description: 'Validates that transaction dates are not in the future and within reasonable past range',
+    type: 'consistency',
+    severity: 'high' as QualitySeverity,
+    rule: 'transaction_date <= CURRENT_TIMESTAMP AND transaction_date >= DATE_SUB(CURRENT_TIMESTAMP, INTERVAL 2 YEAR)',
+    enabled: true,
+    lastExecuted: '2024-01-09T06:45:00Z'
+  },
+  {
+    id: 'qr-007',
+    name: 'Status Value Accuracy',
+    description: 'Ensures transaction status contains only valid values',
+    type: 'accuracy',
+    severity: 'high' as QualitySeverity,
+    rule: 'status IN (\'approved\', \'denied\', \'pending\', \'cancelled\')',
+    enabled: true,
+    lastExecuted: '2024-01-09T05:20:00Z'
+  },
+  {
+    id: 'qr-008',
+    name: 'Card Hash Format Validation',
+    description: 'Validates that card number hashes follow SHA-256 format (64 hex characters)',
+    type: 'format_validation',
+    severity: 'low' as QualitySeverity,
+    rule: 'card_number_hash REGEXP \'^[a-fA-F0-9]{64}$\'',
+    enabled: false,
+    lastExecuted: '2024-01-08T14:00:00Z'
+  },
+  {
+    id: 'qr-009',
+    name: 'Null Value Monitoring',
+    description: 'Monitors for unexpected null values in critical fields',
+    type: 'completeness',
+    severity: 'low' as QualitySeverity,
+    rule: 'transaction_id IS NOT NULL AND customer_cpf IS NOT NULL AND transaction_amount IS NOT NULL',
+    enabled: false,
+    lastExecuted: '2024-01-07T12:30:00Z'
   }
 ];
 
@@ -299,7 +405,7 @@ const mockDataProducts: DataProduct[] = [
     github: {
       repoName: 'data-cartoes-etl',
       repoUrl: 'https://github.com/banco/data-cartoes-etl',
-      pagesUrl: 'https://banco.github.io/data-cartoes-etl',
+      pagesUrl: 'https://ryojikn.github.io/mlflow-proxy/',
       branch: 'main',
       lastCommit: {
         sha: 'a1b2c3d4e5f6',
@@ -340,7 +446,7 @@ const mockDataProducts: DataProduct[] = [
     github: {
       repoName: 'cartoes-analytics-dashboard',
       repoUrl: 'https://github.com/banco/cartoes-analytics-dashboard',
-      pagesUrl: 'https://banco.github.io/cartoes-analytics-dashboard',
+      pagesUrl: 'https://ryojikn.github.io/mlflow-proxy/',
       branch: 'main'
     },
     lastExecution: mockExecutions[1],
@@ -355,7 +461,11 @@ const mockDataProducts: DataProduct[] = [
 
 // Populate collections with contracts
 mockCollections[0].contracts = [mockDataContracts[0]]; // cartoes-credito
-mockDomains[0].collections = mockCollections; // cartoes domain
+
+// Populate domains with their respective collections
+mockDomains.forEach(domain => {
+  domain.collections = mockCollections.filter(c => c.domainId === domain.id);
+});
 
 /**
  * Mock Data Service
@@ -418,9 +528,11 @@ export class MockDataService {
   }
 
   // Quality and execution operations
-  async getExecutionHistory(_productId: string): Promise<ExecutionInfo[]> {
+  async getExecutionHistory(productId: string): Promise<ExecutionInfo[]> {
     await this.delay(200);
     // Return mock executions for any product
+    // In a real implementation, this would filter by productId
+    console.log(`Getting execution history for product: ${productId}`);
     return [...mockExecutions];
   }
 
@@ -429,9 +541,11 @@ export class MockDataService {
     return mockQualityAlerts.filter(alert => alert.productId === productId);
   }
 
-  async getDeployments(_productId: string): Promise<DeploymentInfo[]> {
+  async getDeployments(productId: string): Promise<DeploymentInfo[]> {
     await this.delay(200);
     // Return mock deployments for any product
+    // In a real implementation, this would filter by productId
+    console.log(`Getting deployments for product: ${productId}`);
     return [...mockDeployments];
   }
 

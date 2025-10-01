@@ -36,65 +36,66 @@
   - Add 404 error page and route protection
   - _Requirements: 1.3, 2.3, 5.4, 6.1_
 
-- [ ] 6. Build domain listing and navigation
+- [x] 6. Build domain listing and navigation
   - Create DomainCard component with banking domain examples
   - Implement DomainListPage with grid layout of domain cards
   - Add click handlers to navigate to domain collections
   - Include loading states and error handling
   - _Requirements: 1.1, 1.2, 1.3, 1.4_
 
-- [ ] 7. Implement collection listing functionality
+- [x] 7. Implement collection listing functionality
   - Create CollectionList component for displaying collections within a domain
   - Build CollectionListPage with collection cards (e.g., "cartões de crédito")
   - Add navigation from collections to contract listings
   - Include domain context and breadcrumb navigation
   - _Requirements: 2.1, 2.2, 2.3_
 
-- [ ] 8. Create schema visualization component
+- [x] 8. Create schema visualization component
   - Build SchemaVisualizer component to display table schema visually
   - Implement table representation with column names, types, and constraints
   - Add tooltip functionality for schema dictionary descriptions
   - Include visual indicators for primary keys and relationships
   - _Requirements: 3.2, 4.2_
 
-- [ ] 9. Build DataContract detail page layout
+- [x] 9. Build DataContract detail page layout
   - Create DataContractDetailPage with two-column layout
   - Implement left column for contract information display
   - Build right column container for modules (products and quality rules)
   - Add schema visualizer in the top row as specified
   - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5_
 
-- [ ] 10. Implement contract information panel
+- [x] 10. Implement contract information panel
   - Create ContractInfoPanel component for left column content
   - Display contract fundamentals (name, version, owner, domain, collection)
   - Show contract terms and additional metadata
   - Include tag display for Layer and Status information
   - _Requirements: 3.4, 4.1, 4.4_
 
-- [ ] 11. Build DataProducts module for contract page
+- [x] 11. Build DataProducts module for contract page
   - Create DataProductsModule component for right column
   - Display associated products with last execution info and technology
   - Add click handlers to navigate to individual product pages
   - Include product status indicators and basic information
   - _Requirements: 3.5, 5.1, 5.2, 5.3, 5.4_
 
-- [ ] 12. Implement Quality Rules module
+- [x] 12. Implement Quality Rules module
   - Create QualityRulesModule component for contract page
   - Display all quality rules associated with the contract
   - Format rules in a readable, organized manner
   - Add visual indicators for rule types and severity
   - _Requirements: 3.5, 4.3_
 
-- [ ] 13. Create DataProduct detail page structure
+- [x] 13. Create DataProduct detail page structure
   - Build DataProductDetailPage with two-column layout
   - Implement main content area with tab navigation
   - Create sidebar area for status modules
   - Set up tab switching functionality between documentation and YAML
   - _Requirements: 6.1, 6.2_
 
-- [ ] 14. Implement documentation tab with GitHub Pages integration
+- [x] 14. Implement documentation tab with GitHub Pages integration
   - Create DocumentationTab component with iframe embedding
   - Integrate GitHub Pages URL rendering with proper sandbox settings
+  - Fetch https://ryojikn.github.io/mlflow-proxy/ as github pages url mockup
   - Add loading states and error handling for external content
   - Include fallback content when GitHub Pages is unavailable
   - _Requirements: 6.3_
