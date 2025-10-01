@@ -1,0 +1,5 @@
+export { DocumentationTab } from './documentation-tab'
+export { YamlConfigTab } from './yaml-config-tab'
+export { DeploymentsModule } from './deployments-module'
+export { ExecutionsModule } from './executions-module'
+export { QualityMonitorModule } from './quality-monitor-module'
