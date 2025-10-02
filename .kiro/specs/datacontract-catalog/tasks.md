@@ -233,7 +233,54 @@
   - Implement icon badges for cart count and notification count
   - _Requirements: New feature - Enhanced header navigation_
 
-- [ ] 24. Implement error handling and loading states
+- [x] 24. Expand mock data with diverse domains and data products
+  - Add comprehensive mock data for all existing domains (Cartões, Seguros, Consórcio, Investimentos)
+  - Create diverse data contracts covering different data types and use cases
+  - Implement varied data products with different technologies and purposes
+  - Ensure each data product represents a specific pipeline constraint (ingestion, transformation, model, dashboard)
+  - _Requirements: New feature - Comprehensive mock data expansion_
+
+- [x] 24.1 Expand Cartões domain with comprehensive contracts and products
+  - Add contracts for different card types (credit, debit, prepaid) with realistic schemas
+  - Create ingestion pipeline products for real-time transaction processing
+  - Implement ML model products for fraud detection and credit scoring
+  - Add transformation products for data aggregation and reporting
+  - Include dashboard products for business intelligence and monitoring
+  - _Requirements: New feature - Cartões domain expansion_
+
+- [x] 24.2 Build comprehensive Seguros domain data
+  - Create contracts for different insurance types (life, auto, home, health)
+  - Add ingestion products for policy and claims data processing
+  - Implement actuarial model products for risk assessment and pricing
+  - Create transformation products for regulatory reporting
+  - Add dashboard products for claims monitoring and business analytics
+  - _Requirements: New feature - Seguros domain expansion_
+
+- [x] 24.3 Develop Consórcio domain with varied data products
+  - Add contracts for consortium groups (real estate, vehicles) with member data
+  - Create ingestion products for payment processing and member management
+  - Implement model products for group formation optimization and risk analysis
+  - Add transformation products for financial reporting and compliance
+  - Include dashboard products for group performance and member analytics
+  - _Requirements: New feature - Consórcio domain expansion_
+
+- [x] 24.4 Expand Investimentos domain with financial data products
+  - Create contracts for different investment products (funds, fixed income, stocks)
+  - Add ingestion products for market data and portfolio management
+  - Implement model products for portfolio optimization and risk management
+  - Create transformation products for performance calculation and reporting
+  - Add dashboard products for investment analytics and client reporting
+  - _Requirements: New feature - Investimentos domain expansion_
+
+- [x] 24.5 Ensure technology diversity across data products
+  - Use different technologies for each product type (Databricks, Airflow, MLflow, Power BI, Tableau)
+  - Implement varied pipeline constraints (batch vs streaming, model training vs inference)
+  - Add different data sources (databases, APIs, files, streaming platforms)
+  - Ensure each domain has products with distinct purposes and technologies
+  - Create realistic execution histories and quality rules for each product
+  - _Requirements: New feature - Technology and purpose diversity_
+
+- [ ] 25. Implement error handling and loading states
   - Add React Error Boundaries for component error catching
   - Implement skeleton loaders for all data-fetching components
   - Create user-friendly error messages and retry mechanisms
