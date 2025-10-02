@@ -56,6 +56,24 @@ export const useDomainStore = create<DomainState>((set, get) => ({
 
   // Select a domain by ID and fetch its details
   selectDomain: async (id: string) => {
+    const { domains } = get();
+    
+    // First try to find the domain in the already loaded domains
+    const existingDomain = domains.find(d => d.id === id);
+    
+    if (existingDomain) {
+      // Domain already exists in store, just select it without API call
+      set({ 
+        selectedDomain: existingDomain,
+        error: null 
+      });
+      
+      // Fetch collections for the selected domain
+      await get().fetchCollectionsByDomain(id);
+      return;
+    }
+    
+    // If domain not found in store, fetch it from API
     set({ loading: true, error: null });
     
     try {

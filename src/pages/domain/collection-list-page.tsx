@@ -9,23 +9,27 @@ export function CollectionListPage() {
   const { domainId } = useParams<{ domainId: string }>()
   const { domains, selectedDomain, loading, error, fetchDomains, selectDomain } = useDomainStore()
 
+  // Load domains if not already loaded
   useEffect(() => {
     if (domains.length === 0) {
       fetchDomains()
     }
   }, [domains.length, fetchDomains])
 
+  // Select domain when domains are loaded and domainId changes
   useEffect(() => {
-    if (domainId && domains.length > 0) {
+    if (domainId && domains.length > 0 && (!selectedDomain || selectedDomain.id !== domainId)) {
       selectDomain(domainId)
     }
-  }, [domainId, domains, selectDomain])
+  }, [domainId, domains.length, selectedDomain?.id, selectDomain])
 
   if (!domainId) {
     return <Navigate to="/" replace />
   }
 
-  if (loading) {
+  // Show loading only when domains are being fetched for the first time
+  // Don't show loading when just selecting a domain from already loaded domains
+  if (loading && domains.length === 0) {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="h-6 bg-muted animate-pulse rounded mb-6 w-64" />
@@ -48,13 +52,16 @@ export function CollectionListPage() {
     )
   }
 
-  if (!selectedDomain) {
+  // If domains are loaded but selectedDomain is not yet set, try to find it in the domains array
+  const currentDomain = selectedDomain || domains.find(d => d.id === domainId)
+  
+  if (!currentDomain) {
     return <Navigate to="/" replace />
   }
 
   const breadcrumbItems: BreadcrumbItem[] = [
     { label: 'Domains', path: '/' },
-    { label: selectedDomain.name, active: true }
+    { label: currentDomain.name, active: true }
   ]
 
   return (
@@ -62,11 +69,11 @@ export function CollectionListPage() {
       <Breadcrumb items={breadcrumbItems} />
       
       <div className="mb-8">
-        <h1 className="text-3xl font-bold">{selectedDomain.name}</h1>
-        <p className="text-muted-foreground mt-2">{selectedDomain.description}</p>
+        <h1 className="text-3xl font-bold">{currentDomain.name}</h1>
+        <p className="text-muted-foreground mt-2">{currentDomain.description}</p>
       </div>
       
-      <CollectionList collections={selectedDomain.collections} domainId={domainId} />
+      <CollectionList collections={currentDomain.collections} domainId={domainId} />
     </div>
   )
 }
