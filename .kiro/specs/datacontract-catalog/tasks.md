@@ -128,7 +128,112 @@
   - Include links to detailed quality reports when available
   - _Requirements: 7.4_
 
-- [ ] 19. Implement error handling and loading states
+- [x] 19. Implement request access workflow for data products
+  - Add "Request Access" button above recent deployments in DataProduct detail page
+  - Create RequestAccessModal component with form fields for BDAC and business justification
+  - Implement modal state management and form validation
+  - Add access request submission handling with proper error states
+  - _Requirements: New feature - Access request workflow_
+
+- [x] 19.1 Build request access modal component
+  - Create RequestAccessModal with form fields for BDAC (Access Group) and Business Justification
+  - Implement form validation for required fields
+  - Add modal open/close state management
+  - Include proper accessibility attributes and keyboard navigation
+  - _Requirements: New feature - Access request modal_
+
+- [x] 19.2 Implement access approval workflow
+  - Create approval notification system for Access Group Owner and Data Product Owner
+  - Build approval status tracking and state management
+  - Implement "handshake" approval process requiring both parties
+  - Add access granted confirmation and user feedback
+  - _Requirements: New feature - Access approval process_
+
+- [ ] 20. Adjust data contract view layout and sizing
+  - Modify DataContractDetailPage layout to use 70/30 ratio for left/right columns
+  - Move data products and quality modules slightly to the right
+  - Expand contract information and terms section to take more space
+  - Suppress data product description to optimize space usage
+  - _Requirements: New feature - Layout optimization_
+
+- [ ] 20.1 Reorganize quality rules display
+  - Move QualityRulesModule from right sidebar to below contract terms
+  - Implement wider field layout for quality rules display
+  - Adjust component styling for better readability in horizontal layout
+  - Update responsive behavior for quality rules in new position
+  - _Requirements: New feature - Quality rules layout change_
+
+- [x] 21. Implement cart-based access request system
+  - Replace "Request Access" button with "Add to Cart" functionality
+  - Create cart store for managing selected data products
+  - Add cart icon to header navigation near theme toggle
+  - Implement cart sidebar that slides from right side of screen
+  - _Requirements: New feature - Cart-based access requests_
+
+- [x] 21.1 Build cart store and data models
+  - Create CartStore with Zustand for managing cart items
+  - Define CartItem interface with product information
+  - Implement add/remove cart functionality
+  - Add cart persistence with localStorage
+  - _Requirements: New feature - Cart state management_
+
+- [x] 21.2 Create cart sidebar component
+  - Build CartSidebar component that slides from right
+  - Display list of selected data products in cart
+  - Add remove functionality for individual cart items
+  - Include cart item count badge on cart icon
+  - _Requirements: New feature - Cart UI component_
+
+- [x] 21.3 Implement bulk access request form
+  - Create BulkAccessRequestModal for cart checkout
+  - Add BDAC dropdown with example options (bdac1, bdac2, bdac3)
+  - Implement single business justification field for all products
+  - Add product selection checkboxes within cart
+  - _Requirements: New feature - Bulk access request form_
+
+- [x] 21.4 Build approval workflow preview
+  - Create ApprovalWorkflowPreview component
+  - Show expected BDAC owner for approval
+  - Display data product owners for each selected product
+  - Add "Submit Request" functionality with workflow preview
+  - _Requirements: New feature - Approval workflow preview_
+
+- [-] 22. Implement notifications system
+  - Add notification bell icon to header near cart icon
+  - Create NotificationStore for managing notifications
+  - Build NotificationSidebar with notification list
+  - Implement toast notifications using ShadCN UI
+  - _Requirements: New feature - Notifications system_
+
+- [-] 22.1 Build notification store and types
+  - Create NotificationStore with Zustand
+  - Define Notification interface with types and status
+  - Implement notification CRUD operations
+  - Add mock notification data for testing
+  - _Requirements: New feature - Notification state management_
+
+- [ ] 22.2 Create notification sidebar component
+  - Build NotificationSidebar that slides from right
+  - Display notification list with read/unread status
+  - Add notification badge with unread count
+  - Implement mark as read functionality
+  - _Requirements: New feature - Notification UI component_
+
+- [ ] 22.3 Integrate toast notifications
+  - Install and configure ShadCN UI toast component
+  - Add toast notifications for cart actions
+  - Implement success toast for access request submission
+  - Add approval/rejection notification toasts
+  - _Requirements: New feature - Toast notifications_
+
+- [ ] 23. Update header navigation layout
+  - Modify header to include cart and notification icons
+  - Position icons near theme toggle in logical order
+  - Add proper spacing and responsive behavior
+  - Implement icon badges for cart count and notification count
+  - _Requirements: New feature - Enhanced header navigation_
+
+- [ ] 24. Implement error handling and loading states
   - Add React Error Boundaries for component error catching
   - Implement skeleton loaders for all data-fetching components
   - Create user-friendly error messages and retry mechanisms

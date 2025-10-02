@@ -3,12 +3,14 @@ export const LAYER_VALUES = ['Bronze', 'Silver', 'Gold', 'Model'] as const;
 export const STATUS_VALUES = ['published', 'draft', 'archived'] as const;
 export const EXECUTION_STATUS_VALUES = ['success', 'failure', 'running'] as const;
 export const QUALITY_SEVERITY_VALUES = ['low', 'medium', 'high', 'critical'] as const;
+export const ACCESS_REQUEST_STATUS_VALUES = ['pending', 'approved_by_access_group', 'approved_by_product_owner', 'approved', 'rejected'] as const;
 
 // Type definitions from constants
 export type Layer = typeof LAYER_VALUES[number];
 export type Status = typeof STATUS_VALUES[number];
 export type ExecutionStatus = typeof EXECUTION_STATUS_VALUES[number];
 export type QualitySeverity = typeof QUALITY_SEVERITY_VALUES[number];
+export type AccessRequestStatus = typeof ACCESS_REQUEST_STATUS_VALUES[number];
 
 // Core domain interfaces
 export interface Domain {
@@ -127,6 +129,72 @@ export interface QualityAlert {
   date: string;
   resolved: boolean;
   productId: string;
+}
+
+// Access request types
+export interface AccessRequest {
+  id: string;
+  productId: string;
+  productName: string;
+  requesterId: string;
+  requesterName: string;
+  requesterEmail: string;
+  bdac: string;
+  businessJustification: string;
+  status: AccessRequestStatus;
+  createdAt: string;
+  updatedAt: string;
+  accessGroupOwnerApproval?: ApprovalInfo;
+  productOwnerApproval?: ApprovalInfo;
+  rejectionReason?: string;
+}
+
+export interface ApprovalInfo {
+  approvedBy: string;
+  approvedAt: string;
+  comments?: string;
+}
+
+export interface AccessRequestNotification {
+  id: string;
+  accessRequestId: string;
+  recipientId: string;
+  recipientEmail: string;
+  type: 'access_group_owner' | 'product_owner' | 'requester';
+  message: string;
+  read: boolean;
+  createdAt: string;
+}
+
+// Cart types
+export interface CartItem {
+  id: string;
+  productId: string;
+  productName: string;
+  dataContractId: string;
+  technology?: string;
+  description?: string;
+  addedAt: string;
+  selected: boolean;
+}
+
+export interface BulkAccessRequest {
+  cartItems: CartItem[];
+  bdac: string;
+  businessJustification: string;
+  selectedProductIds: string[];
+}
+
+// Notification types
+export interface Notification {
+  id: string;
+  type: 'access_approved' | 'access_rejected' | 'access_pending' | 'system';
+  title: string;
+  message: string;
+  productId?: string;
+  productName?: string;
+  read: boolean;
+  createdAt: string;
 }
 
 // Main data product interface

@@ -3,13 +3,16 @@ import { useParams, Navigate } from 'react-router-dom'
 import { useProductStore } from '@/stores/product'
 import { useContractStore } from '@/stores/contract'
 import { useDomainStore } from '@/stores/domain'
+import { useCartStore } from '@/stores/cart'
 import { DocumentationTab } from '@/components/product'
 import { YamlConfigTab } from '@/components/product'
 import { DeploymentsModule } from '@/components/product'
 import { ExecutionsModule } from '@/components/product'
 import { QualityMonitorModule } from '@/components/product'
+import { AccessRequestStatus } from '@/components/product'
 import { Breadcrumb } from '@/components/layout'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
+import { Tabs, TabsContent, TabsList, TabsTrigger, Button } from '@/components/ui'
+import { ShoppingCart, Check } from 'lucide-react'
 import type { BreadcrumbItem } from '@/types'
 
 export function ProductDetailPage() {
@@ -17,6 +20,7 @@ export function ProductDetailPage() {
   const { selectedProduct, loading, error, selectProduct } = useProductStore()
   const { selectedContract, selectContract } = useContractStore()
   const { domains, fetchDomains } = useDomainStore()
+  const { addToCart, isInCart, openCart } = useCartStore()
 
   useEffect(() => {
     if (domains.length === 0) {
@@ -93,6 +97,21 @@ export function ProductDetailPage() {
     { label: selectedProduct.name, active: true }
   ]
 
+  const productInCart = isInCart(selectedProduct.id)
+
+  const handleAddToCart = () => {
+    if (!productInCart) {
+      addToCart(selectedProduct)
+      // Show a brief success message and open cart
+      setTimeout(() => {
+        openCart()
+      }, 500)
+    } else {
+      // If already in cart, just open the cart
+      openCart()
+    }
+  }
+
   return (
     <div className="container mx-auto px-4 py-8">
       <Breadcrumb items={breadcrumbItems} />
@@ -125,11 +144,42 @@ export function ProductDetailPage() {
 
         {/* Sidebar - 1/3 width */}
         <div className="space-y-6">
+          {/* Add to Cart Button */}
+          <div className="border rounded-lg p-4 bg-card">
+            <Button 
+              onClick={handleAddToCart}
+              className="w-full"
+              size="sm"
+              variant={productInCart ? "secondary" : "default"}
+            >
+              {productInCart ? (
+                <>
+                  <Check className="h-4 w-4 mr-2" />
+                  In Cart
+                </>
+              ) : (
+                <>
+                  <ShoppingCart className="h-4 w-4 mr-2" />
+                  Add to Cart
+                </>
+              )}
+            </Button>
+            <p className="text-xs text-muted-foreground mt-2 text-center">
+              {productInCart 
+                ? "This product is in your cart. Click to view cart." 
+                : "Add to cart for bulk access request"
+              }
+            </p>
+          </div>
+
           <DeploymentsModule product={selectedProduct} />
           <ExecutionsModule product={selectedProduct} />
           <QualityMonitorModule product={selectedProduct} />
+          <AccessRequestStatus product={selectedProduct} />
         </div>
       </div>
+
+
     </div>
   )
 }
