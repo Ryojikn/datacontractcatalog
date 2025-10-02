@@ -203,7 +203,7 @@ const mockQualityRules: QualityRule[] = [
   }
 ];
 
-// Mock execution info
+// Mock execution info - comprehensive history for testing
 const mockExecutions: ExecutionInfo[] = [
   {
     id: 'exec-001',
@@ -211,22 +211,118 @@ const mockExecutions: ExecutionInfo[] = [
     status: 'success' as ExecutionStatus,
     duration: 1200,
     technology: 'Databricks',
-    logs: 'Job completed successfully'
+    logs: 'Job completed successfully. Processed 1,234,567 records.'
   },
   {
     id: 'exec-002',
-    date: '2024-01-08T08:00:00Z',
+    date: '2024-01-09T04:00:00Z',
     status: 'success' as ExecutionStatus,
     duration: 1150,
-    technology: 'Databricks'
+    technology: 'Databricks',
+    logs: 'Job completed successfully. Processed 1,198,432 records.'
   },
   {
     id: 'exec-003',
-    date: '2024-01-07T08:00:00Z',
+    date: '2024-01-09T00:00:00Z',
     status: 'failure' as ExecutionStatus,
     duration: 300,
     technology: 'Databricks',
-    errorMessage: 'Connection timeout to source database'
+    errorMessage: 'Connection timeout to source database after 5 minutes'
+  },
+  {
+    id: 'exec-004',
+    date: '2024-01-08T20:00:00Z',
+    status: 'success' as ExecutionStatus,
+    duration: 1089,
+    technology: 'Databricks',
+    logs: 'Job completed successfully. Processed 1,156,789 records.'
+  },
+  {
+    id: 'exec-005',
+    date: '2024-01-08T16:00:00Z',
+    status: 'success' as ExecutionStatus,
+    duration: 1245,
+    technology: 'Databricks',
+    logs: 'Job completed successfully. Processed 1,267,890 records.'
+  },
+  {
+    id: 'exec-006',
+    date: '2024-01-08T12:00:00Z',
+    status: 'running' as ExecutionStatus,
+    duration: 0,
+    technology: 'Databricks'
+  },
+  {
+    id: 'exec-007',
+    date: '2024-01-08T08:00:00Z',
+    status: 'success' as ExecutionStatus,
+    duration: 1178,
+    technology: 'Databricks',
+    logs: 'Job completed successfully. Processed 1,145,623 records.'
+  },
+  {
+    id: 'exec-008',
+    date: '2024-01-08T04:00:00Z',
+    status: 'failure' as ExecutionStatus,
+    duration: 450,
+    technology: 'Databricks',
+    errorMessage: 'Data quality check failed: 15 records with invalid CPF format detected'
+  },
+  {
+    id: 'exec-009',
+    date: '2024-01-08T00:00:00Z',
+    status: 'success' as ExecutionStatus,
+    duration: 1067,
+    technology: 'Databricks',
+    logs: 'Job completed successfully. Processed 1,098,765 records.'
+  },
+  {
+    id: 'exec-010',
+    date: '2024-01-07T20:00:00Z',
+    status: 'success' as ExecutionStatus,
+    duration: 1234,
+    technology: 'Databricks',
+    logs: 'Job completed successfully. Processed 1,234,567 records.'
+  },
+  {
+    id: 'exec-011',
+    date: '2024-01-07T16:00:00Z',
+    status: 'failure' as ExecutionStatus,
+    duration: 180,
+    technology: 'Databricks',
+    errorMessage: 'Insufficient cluster resources. Job terminated due to memory constraints.'
+  },
+  {
+    id: 'exec-012',
+    date: '2024-01-07T12:00:00Z',
+    status: 'success' as ExecutionStatus,
+    duration: 1156,
+    technology: 'Databricks',
+    logs: 'Job completed successfully. Processed 1,187,432 records.'
+  },
+  {
+    id: 'exec-013',
+    date: '2024-01-07T08:00:00Z',
+    status: 'success' as ExecutionStatus,
+    duration: 1089,
+    technology: 'Databricks',
+    logs: 'Job completed successfully. Processed 1,123,456 records.'
+  },
+  {
+    id: 'exec-014',
+    date: '2024-01-07T04:00:00Z',
+    status: 'success' as ExecutionStatus,
+    duration: 1198,
+    technology: 'Databricks',
+    logs: 'Job completed successfully. Processed 1,198,765 records.'
+  },
+  {
+    id: 'exec-015',
+    date: '2024-01-07T00:00:00Z',
+    status: 'failure' as ExecutionStatus,
+    duration: 600,
+    technology: 'Databricks',
+    errorMessage: 'Source table schema mismatch. Expected column "transaction_amount" not found.'
   }
 ];
 
