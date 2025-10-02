@@ -149,14 +149,14 @@
   - Add access granted confirmation and user feedback
   - _Requirements: New feature - Access approval process_
 
-- [-] 20. Adjust data contract view layout and sizing
+- [x] 20. Adjust data contract view layout and sizing
   - Modify DataContractDetailPage layout to use 70/30 ratio for left/right columns
   - Move data products and quality modules slightly to the right
   - Expand contract information and terms section to take more space
   - Suppress data product description to optimize space usage
   - _Requirements: New feature - Layout optimization_
 
-- [-] 20.1 Reorganize quality rules display
+- [x] 20.1 Reorganize quality rules display
   - Move QualityRulesModule from right sidebar to below contract terms
   - Implement wider field layout for quality rules display
   - Adjust component styling for better readability in horizontal layout

@@ -34,13 +34,15 @@ export function ContractDetailPage() {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="h-6 bg-muted animate-pulse rounded mb-6 w-96" />
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <div className="space-y-6">
-            <div className="h-64 bg-muted animate-pulse rounded-lg" />
+        <div className="mb-8">
+          <div className="h-64 bg-muted animate-pulse rounded-lg" />
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-10 gap-8">
+          <div className="lg:col-span-7 space-y-6">
             <div className="h-96 bg-muted animate-pulse rounded-lg" />
+            <div className="h-64 bg-muted animate-pulse rounded-lg" />
           </div>
-          <div className="space-y-6">
-            <div className="h-48 bg-muted animate-pulse rounded-lg" />
+          <div className="lg:col-span-3">
             <div className="h-48 bg-muted animate-pulse rounded-lg" />
           </div>
         </div>
@@ -94,17 +96,21 @@ export function ContractDetailPage() {
         <SchemaVisualizer schema={selectedContract.schema} />
       </div>
 
-      {/* Two-column layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Left column - Contract Information */}
-        <div>
+      {/* Two-column layout - 70/30 ratio */}
+      <div className="grid grid-cols-1 lg:grid-cols-10 gap-8">
+        {/* Left column - Contract Information (70%) */}
+        <div className="lg:col-span-7">
           <ContractInfoPanel contract={selectedContract} />
+          
+          {/* Quality Rules moved below contract info */}
+          <div className="mt-8">
+            <QualityRulesModule qualityRules={selectedContract.qualityRules} />
+          </div>
         </div>
 
-        {/* Right column - Modules */}
-        <div className="space-y-6">
+        {/* Right column - Data Products Module (30%) */}
+        <div className="lg:col-span-3">
           <DataProductsModule contractId={selectedContract.id} />
-          <QualityRulesModule qualityRules={selectedContract.qualityRules} />
         </div>
       </div>
     </div>

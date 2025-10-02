@@ -104,11 +104,7 @@ export function DataProductsModule({ contractId }: DataProductsModuleProps) {
               <div className="flex justify-between items-start mb-3">
                 <div className="flex-1">
                   <h4 className="font-medium text-base mb-1">{product.name}</h4>
-                  {product.description && (
-                    <p className="text-sm text-muted-foreground line-clamp-2">
-                      {product.description}
-                    </p>
-                  )}
+                  {/* Description suppressed to optimize space usage in narrower column */}
                 </div>
                 {product.technology && (
                   <Badge variant="model" className="ml-2 shrink-0">

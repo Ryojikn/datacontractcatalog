@@ -95,7 +95,7 @@ export function QualityRulesModule({ qualityRules }: QualityRulesModuleProps) {
 
   return (
     <div className="border rounded-lg p-6 bg-card">
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-6">
         <h2 className="text-xl font-semibold">Quality Rules</h2>
         {qualityRules.length > 0 && (
           <div className="flex items-center gap-2">
@@ -126,14 +126,14 @@ export function QualityRulesModule({ qualityRules }: QualityRulesModuleProps) {
       )}
 
       {qualityRules.length > 0 && (
-        <div className="space-y-4">
+        <div className="space-y-6">
           {/* Critical Rules First */}
           {ruleGroups.critical.length > 0 && (
             <div>
-              <h3 className="text-sm font-medium text-destructive mb-2 flex items-center gap-2">
+              <h3 className="text-sm font-medium text-destructive mb-3 flex items-center gap-2">
                 🔴 Critical Rules ({ruleGroups.critical.length})
               </h3>
-              <div className="space-y-3">
+              <div className="space-y-4">
                 {ruleGroups.critical.map((rule) => (
                   <QualityRuleCard key={rule.id} rule={rule} />
                 ))}
@@ -144,10 +144,10 @@ export function QualityRulesModule({ qualityRules }: QualityRulesModuleProps) {
           {/* High Severity Rules */}
           {ruleGroups.high.length > 0 && (
             <div>
-              <h3 className="text-sm font-medium text-orange-600 mb-2 flex items-center gap-2">
+              <h3 className="text-sm font-medium text-orange-600 mb-3 flex items-center gap-2">
                 🟠 High Priority Rules ({ruleGroups.high.length})
               </h3>
-              <div className="space-y-3">
+              <div className="space-y-4">
                 {ruleGroups.high.map((rule) => (
                   <QualityRuleCard key={rule.id} rule={rule} />
                 ))}
@@ -158,10 +158,10 @@ export function QualityRulesModule({ qualityRules }: QualityRulesModuleProps) {
           {/* Medium and Low Severity Rules */}
           {(ruleGroups.medium.length > 0 || ruleGroups.low.length > 0) && (
             <div>
-              <h3 className="text-sm font-medium text-muted-foreground mb-2 flex items-center gap-2">
+              <h3 className="text-sm font-medium text-muted-foreground mb-3 flex items-center gap-2">
                 📋 Other Rules ({ruleGroups.medium.length + ruleGroups.low.length})
               </h3>
-              <div className="space-y-3">
+              <div className="space-y-4">
                 {[...ruleGroups.medium, ...ruleGroups.low].map((rule) => (
                   <QualityRuleCard key={rule.id} rule={rule} />
                 ))}
@@ -180,64 +180,65 @@ export function QualityRulesModule({ qualityRules }: QualityRulesModuleProps) {
           ? 'bg-card hover:bg-muted/30' 
           : 'bg-muted/20 border-dashed opacity-75'
       }`}>
-        <div className="flex justify-between items-start mb-3">
-          <div className="flex items-start gap-3 flex-1">
-            <span className="text-lg mt-0.5" title={`${rule.type} rule`}>
+        {/* Header with title, status, and severity in a horizontal layout */}
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-3 flex-1">
+            <span className="text-lg" title={`${rule.type} rule`}>
               {getRuleTypeIcon(rule.type)}
             </span>
             <div className="flex-1">
-              <h4 className="font-medium text-base mb-1 flex items-center gap-2">
+              <h4 className="font-medium text-base flex items-center gap-2">
                 {rule.name}
                 {!rule.enabled && (
                   <span className="text-xs text-muted-foreground">(Disabled)</span>
                 )}
               </h4>
-              <p className="text-sm text-muted-foreground mb-2 leading-relaxed">
-                {rule.description}
-              </p>
             </div>
           </div>
-          <div className="flex items-center gap-2 ml-2">
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-4 text-xs text-muted-foreground">
+              <span className="flex items-center gap-1">
+                <span className="font-medium">Type:</span>
+                <span className="capitalize">{rule.type.replace('_', ' ')}</span>
+              </span>
+              <span className="flex items-center gap-1">
+                <span className="font-medium">Status:</span>
+                <span className={rule.enabled ? 'text-green-600' : 'text-muted-foreground'}>
+                  {rule.enabled ? 'Active' : 'Inactive'}
+                </span>
+              </span>
+              {rule.lastExecuted && (
+                <span className="flex items-center gap-1">
+                  <span className="font-medium">Last run:</span>
+                  <span title={new Date(rule.lastExecuted).toLocaleString()}>
+                    {formatLastExecuted(rule.lastExecuted)}
+                  </span>
+                </span>
+              )}
+            </div>
             <Badge variant={getSeverityBadgeVariant(rule.severity)} className="shrink-0">
               {getSeverityIcon(rule.severity)} {rule.severity.toUpperCase()}
             </Badge>
           </div>
         </div>
 
-        {/* Rule Details */}
-        <div className="bg-muted/30 rounded-md p-3 mb-3">
-          <div className="flex items-start gap-2">
-            <span className="text-xs text-muted-foreground font-medium shrink-0 mt-0.5">
-              RULE:
-            </span>
-            <code className="text-xs font-mono bg-background px-2 py-1 rounded border flex-1 break-all">
-              {rule.rule}
-            </code>
+        {/* Description and Rule in a two-column layout for better horizontal space usage */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              {rule.description}
+            </p>
           </div>
-        </div>
-
-        {/* Metadata */}
-        <div className="flex items-center justify-between text-xs text-muted-foreground">
-          <div className="flex items-center gap-4">
-            <span className="flex items-center gap-1">
-              <span className="font-medium">Type:</span>
-              <span className="capitalize">{rule.type.replace('_', ' ')}</span>
-            </span>
-            <span className="flex items-center gap-1">
-              <span className="font-medium">Status:</span>
-              <span className={rule.enabled ? 'text-green-600' : 'text-muted-foreground'}>
-                {rule.enabled ? 'Active' : 'Inactive'}
+          <div className="bg-muted/30 rounded-md p-3">
+            <div className="flex items-start gap-2">
+              <span className="text-xs text-muted-foreground font-medium shrink-0 mt-0.5">
+                RULE:
               </span>
-            </span>
+              <code className="text-xs font-mono bg-background px-2 py-1 rounded border flex-1 break-all">
+                {rule.rule}
+              </code>
+            </div>
           </div>
-          {rule.lastExecuted && (
-            <span className="flex items-center gap-1">
-              <span className="font-medium">Last run:</span>
-              <span title={new Date(rule.lastExecuted).toLocaleString()}>
-                {formatLastExecuted(rule.lastExecuted)}
-              </span>
-            </span>
-          )}
         </div>
       </div>
     )
