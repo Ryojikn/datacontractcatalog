@@ -19,6 +19,7 @@ import {
 } from '@/components/ui'
 import { useCartStore } from '@/stores/cart'
 import { useAccessRequestStore } from '@/stores/access'
+import { useNotificationStore } from '@/stores/notification'
 import { useToast } from '@/hooks/use-toast'
 import { ChevronRight, Users, User } from 'lucide-react'
 
@@ -61,6 +62,7 @@ const getProductOwner = (productName: string): string => {
 export function BulkAccessRequestModal({ open, onOpenChange }: BulkAccessRequestModalProps) {
   const { getSelectedItems, clearCart } = useCartStore()
   const { submitAccessRequest, loading } = useAccessRequestStore()
+  const { addAccessPendingNotification } = useNotificationStore()
   const { toast } = useToast()
   const [currentStep, setCurrentStep] = useState<'form' | 'preview'>('form')
   const [formData, setFormData] = useState<FormData>({
@@ -115,6 +117,9 @@ export function BulkAccessRequestModal({ open, onOpenChange }: BulkAccessRequest
           bdac: formData.bdac,
           businessJustification: formData.businessJustification
         })
+        
+        // Add pending notification for each product
+        addAccessPendingNotification(item.productName, item.productId)
       }
 
       // Clear cart and close modal

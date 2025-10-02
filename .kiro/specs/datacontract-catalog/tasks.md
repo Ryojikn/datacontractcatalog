@@ -149,14 +149,14 @@
   - Add access granted confirmation and user feedback
   - _Requirements: New feature - Access approval process_
 
-- [ ] 20. Adjust data contract view layout and sizing
+- [-] 20. Adjust data contract view layout and sizing
   - Modify DataContractDetailPage layout to use 70/30 ratio for left/right columns
   - Move data products and quality modules slightly to the right
   - Expand contract information and terms section to take more space
   - Suppress data product description to optimize space usage
   - _Requirements: New feature - Layout optimization_
 
-- [ ] 20.1 Reorganize quality rules display
+- [-] 20.1 Reorganize quality rules display
   - Move QualityRulesModule from right sidebar to below contract terms
   - Implement wider field layout for quality rules display
   - Adjust component styling for better readability in horizontal layout
@@ -198,35 +198,35 @@
   - Add "Submit Request" functionality with workflow preview
   - _Requirements: New feature - Approval workflow preview_
 
-- [-] 22. Implement notifications system
+- [x] 22. Implement notifications system
   - Add notification bell icon to header near cart icon
   - Create NotificationStore for managing notifications
   - Build NotificationSidebar with notification list
   - Implement toast notifications using ShadCN UI
   - _Requirements: New feature - Notifications system_
 
-- [-] 22.1 Build notification store and types
+- [x] 22.1 Build notification store and types
   - Create NotificationStore with Zustand
   - Define Notification interface with types and status
   - Implement notification CRUD operations
   - Add mock notification data for testing
   - _Requirements: New feature - Notification state management_
 
-- [ ] 22.2 Create notification sidebar component
+- [x] 22.2 Create notification sidebar component
   - Build NotificationSidebar that slides from right
   - Display notification list with read/unread status
   - Add notification badge with unread count
   - Implement mark as read functionality
   - _Requirements: New feature - Notification UI component_
 
-- [ ] 22.3 Integrate toast notifications
+- [x] 22.3 Integrate toast notifications
   - Install and configure ShadCN UI toast component
   - Add toast notifications for cart actions
   - Implement success toast for access request submission
   - Add approval/rejection notification toasts
   - _Requirements: New feature - Toast notifications_
 
-- [ ] 23. Update header navigation layout
+- [x] 23. Update header navigation layout
   - Modify header to include cart and notification icons
   - Position icons near theme toggle in logical order
   - Add proper spacing and responsive behavior

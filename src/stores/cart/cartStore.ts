@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import type { CartItem, DataProduct } from '@/types'
+import { toast } from '@/hooks/use-toast'
 
 interface CartStore {
   items: CartItem[]
@@ -31,6 +32,11 @@ export const useCartStore = create<CartStore>()(
         
         if (existingItem) {
           // Item already in cart, don't add duplicate
+          toast({
+            title: "Already in cart",
+            description: `${product.name} is already in your cart.`,
+            variant: "default"
+          })
           return
         }
 
@@ -48,16 +54,41 @@ export const useCartStore = create<CartStore>()(
         set(state => ({
           items: [...state.items, newItem]
         }))
+
+        toast({
+          title: "Added to cart",
+          description: `${product.name} has been added to your cart.`,
+          variant: "default"
+        })
       },
 
       removeFromCart: (productId: string) => {
+        const item = get().items.find(item => item.productId === productId)
+        
         set(state => ({
           items: state.items.filter(item => item.productId !== productId)
         }))
+
+        if (item) {
+          toast({
+            title: "Removed from cart",
+            description: `${item.productName} has been removed from your cart.`,
+            variant: "default"
+          })
+        }
       },
 
       clearCart: () => {
+        const itemCount = get().items.length
         set({ items: [] })
+        
+        if (itemCount > 0) {
+          toast({
+            title: "Cart cleared",
+            description: `All ${itemCount} item${itemCount !== 1 ? 's' : ''} removed from your cart.`,
+            variant: "default"
+          })
+        }
       },
 
       toggleCartItem: (productId: string) => {
