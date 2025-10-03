@@ -33,6 +33,9 @@ export function AIChat() {
   const handleCardAction = (card: SearchResult, actionType: string) => {
     switch (actionType) {
       case 'navigate':
+        // Close search modal and clear state before navigation
+        useSearchStore.getState().closeSearch();
+        
         if (card.type === 'domain') {
           navigate(`/domain/${card.id}`);
         } else if (card.type === 'contract') {

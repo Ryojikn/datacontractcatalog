@@ -52,6 +52,9 @@ export function SearchResults() {
 
     switch (actionType) {
       case 'navigate':
+        // Close search modal and clear state before navigation
+        useSearchStore.getState().closeSearch();
+        
         if (result.type === 'domain') {
           navigate(`/domain/${result.id}`);
         } else if (result.type === 'contract') {
