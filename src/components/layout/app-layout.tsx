@@ -6,7 +6,7 @@ import { useCartStore } from "@/stores/cart"
 import { useNotificationStore } from "@/stores/notification"
 import { useSearchStore } from "@/stores/search"
 import { Button, Badge } from "@/components/ui"
-import { ShoppingCart, Bell, Search } from "lucide-react"
+import { ShoppingCart, Bell, Search, BarChart3 } from "lucide-react"
 
 interface AppLayoutProps {
   children: React.ReactNode
@@ -39,6 +39,21 @@ export function AppLayout({ children }: AppLayoutProps) {
               aria-label="Search data catalog (Cmd+K)"
             >
               <Search className="h-4 w-4" />
+            </Button>
+            
+            {/* Dashboard Button */}
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => {
+                // TODO: Implementar navegação para dashboard
+                console.log('Dashboard clicked - feature coming soon');
+              }}
+              className="p-2"
+              aria-label="Dashboard"
+              title="Dashboard"
+            >
+              <BarChart3 className="h-4 w-4" />
             </Button>
             
             {/* Cart Button */}
