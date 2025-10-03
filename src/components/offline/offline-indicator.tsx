@@ -1,7 +1,7 @@
 import { WifiOff } from 'lucide-react';
 import { useOnlineStatus } from '../../hooks/use-online-status';
 import { useEffect, useRef } from 'react';
-import { toast } from '../../hooks/use-toast';
+// import { toast } from '../../hooks/use-toast'; // Temporarily disabled
 
 export const OfflineIndicator = () => {
   const isOnline = useOnlineStatus();
@@ -11,13 +11,8 @@ export const OfflineIndicator = () => {
     if (!isOnline) {
       wasOffline.current = true;
     } else if (wasOffline.current && isOnline) {
-      // Show success toast when coming back online
-      toast({
-        title: "✅ Conexão restabelecida",
-        description: "Você está online novamente",
-        className: "bg-green-500 text-white border-green-600",
-        duration: 1000, // 1 segundo
-      });
+      // Show success message when coming back online (toast temporarily disabled)
+      console.log("✅ Conexão restabelecida - Você está online novamente");
       wasOffline.current = false;
     }
   }, [isOnline]);

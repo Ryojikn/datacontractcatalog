@@ -256,3 +256,215 @@ interface DataProductStore {
 - Navegação por teclado
 - Screen reader support
 - Alto contraste nos temas
+## A
+I-Powered Semantic Search System
+
+### Search Architecture Overview
+
+```mermaid
+graph TB
+    A[Global Search Interface] --> B[Search Mode Toggle]
+    B --> C[Traditional Results View]
+    B --> D[AI Conversational View]
+    
+    A --> E[Search Store]
+    E --> F[Search History]
+    E --> G[Query Processing]
+    E --> H[Result Caching]
+    
+    G --> I[Semantic Search Engine]
+    I --> J[Vector Embeddings]
+    I --> K[Content Indexing]
+    I --> L[Relevance Scoring]
+    
+    G --> M[AI Response Generator]
+    M --> N[Natural Language Understanding]
+    M --> O[Context-Aware Responses]
+    M --> P[Follow-up Suggestions]
+    
+    C --> Q[Search Results Grid]
+    Q --> R[Domain Cards]
+    Q --> S[Contract Cards]
+    Q --> T[Product Cards]
+    
+    D --> U[Chat Interface]
+    U --> V[Message Bubbles]
+    U --> W[Rich Response Cards]
+    U --> X[Action Buttons]
+```
+
+### Search Interface Design
+
+#### Global Search Component
+- **Trigger**: Accessible via Cmd/Ctrl+K shortcut from any page
+- **Location**: Search icon in header navigation (next to cart and notifications)
+- **Modal Overlay**: Full-screen search interface with backdrop blur
+- **Search Bar**: Intelligent autocomplete with recent searches and suggestions
+
+#### Dual Search Modes
+
+**1. Traditional Results Mode**
+- Grid layout with cards for domains, contracts, and products
+- Tabbed interface: All | Domains | Contracts | Products
+- Search result highlighting and relevance indicators
+- Quick action buttons: View Details, Add to Cart, Request Access
+- Pagination and infinite scroll for large result sets
+
+**2. AI Conversational Mode**
+- Chat-like interface with message bubbles
+- Natural language query processing
+- Rich responses with embedded cards and links
+- Contextual follow-up questions and suggestions
+- Conversation history and refinement capabilities
+
+### Semantic Search Engine
+
+#### Content Indexing Strategy
+```typescript
+interface SearchIndex {
+  domains: {
+    id: string;
+    name: string;
+    description: string;
+    keywords: string[];
+    collections: string[];
+  }[];
+  contracts: {
+    id: string;
+    name: string;
+    description: string;
+    domain: string;
+    collection: string;
+    schema: SchemaField[];
+    qualityRules: string[];
+    tags: string[];
+  }[];
+  products: {
+    id: string;
+    name: string;
+    description: string;
+    technology: string;
+    contractId: string;
+    purpose: string;
+    keywords: string[];
+  }[];
+}
+```
+
+#### Query Processing Pipeline
+1. **Query Analysis**: Parse natural language intent and extract entities
+2. **Semantic Matching**: Use vector embeddings for content similarity
+3. **Relevance Scoring**: Combine semantic similarity with popularity and recency
+4. **Result Ranking**: Apply user context and personalization factors
+5. **Response Generation**: Format results for traditional or conversational display
+
+### AI Response Generation
+
+#### Natural Language Understanding
+- Intent classification: discovery, comparison, technical details, access requests
+- Entity extraction: domain names, data types, technologies, business purposes
+- Context awareness: user role, recent activity, current page context
+
+#### Response Templates
+```typescript
+interface AIResponse {
+  type: 'discovery' | 'explanation' | 'recommendation' | 'comparison';
+  message: string;
+  cards: SearchResultCard[];
+  actions: ActionButton[];
+  followUpQuestions: string[];
+  relatedSearches: string[];
+}
+```
+
+#### Example AI Interactions
+- **Query**: "Show me fraud detection models in credit cards"
+- **Response**: Conversational explanation + relevant ML model products + related contracts
+- **Actions**: View Models, Compare Approaches, Request Access, Learn More
+
+- **Query**: "What customer data is available for marketing campaigns?"
+- **Response**: Privacy-aware explanation + relevant datasets + compliance information
+- **Actions**: View Schemas, Check Access Requirements, Contact Data Owner
+
+### Search Result Components
+
+#### SearchResultCard
+```typescript
+interface SearchResultCard {
+  id: string;
+  type: 'domain' | 'contract' | 'product';
+  title: string;
+  description: string;
+  metadata: {
+    domain?: string;
+    technology?: string;
+    lastUpdated?: string;
+    qualityScore?: number;
+  };
+  actions: QuickAction[];
+  preview?: {
+    schema?: SchemaField[];
+    sampleData?: any;
+    documentation?: string;
+  };
+}
+```
+
+#### Quick Actions
+- **View Details**: Navigate to full detail page
+- **Add to Cart**: Add product to access request cart
+- **Preview Schema**: Show schema in modal overlay
+- **Request Access**: Direct access request for single item
+- **Compare**: Add to comparison view
+- **Bookmark**: Save to personal catalog
+
+### Advanced Search Features
+
+#### Intelligent Filters
+- **Domain**: Filter by business domain (Cartões, Seguros, etc.)
+- **Technology**: Filter by tech stack (Databricks, Airflow, MLflow, etc.)
+- **Data Type**: Filter by data categories (customer, transaction, risk, etc.)
+- **Freshness**: Filter by last update time
+- **Quality Score**: Filter by data quality metrics
+- **Access Level**: Filter by available access permissions
+
+#### Personalization
+- **Role-based suggestions**: Tailor results based on user role (analyst, engineer, etc.)
+- **Usage history**: Prioritize frequently accessed content
+- **Team context**: Show content relevant to user's team/department
+- **Saved searches**: Quick access to frequently used queries
+- **Search alerts**: Notifications for new content matching saved searches
+
+### Search Performance Optimization
+
+#### Caching Strategy
+- **Query result caching**: Cache search results for 5 minutes
+- **Autocomplete caching**: Cache suggestions for 1 hour
+- **Index caching**: Update search index every 15 minutes
+- **AI response caching**: Cache AI responses for similar queries
+
+#### Progressive Enhancement
+- **Instant search**: Show results as user types
+- **Lazy loading**: Load additional results on scroll
+- **Prefetching**: Preload likely next searches
+- **Offline support**: Cache recent searches for offline access
+
+### Integration with Existing Workflows
+
+#### Navigation Integration
+- **Header search icon**: Always visible search entry point
+- **Keyboard shortcuts**: Cmd/Ctrl+K global search activation
+- **Context-aware search**: Pre-populate search based on current page
+- **Deep linking**: Shareable URLs for search results
+
+#### Workflow Actions
+- **Search → Cart**: Direct integration with access request workflow
+- **Search → Details**: Seamless navigation to detail pages
+- **Search → Compare**: Multi-select comparison functionality
+- **Search → Share**: Share search results with team members
+
+#### Analytics and Insights
+- **Search analytics**: Track query patterns and result interactions
+- **Content discovery**: Identify popular and underutilized data assets
+- **User behavior**: Understand how users discover and access data
+- **Performance metrics**: Monitor search response times and accuracy

@@ -1,10 +1,12 @@
 import { ThemeToggle } from "@/components/theme-toggle"
 import { CartSidebar } from "@/components/cart"
 import { NotificationSidebar } from "@/components/notification"
+import { SearchModal } from "@/components/search"
 import { useCartStore } from "@/stores/cart"
 import { useNotificationStore } from "@/stores/notification"
-import { Button, Badge, Toaster } from "@/components/ui"
-import { ShoppingCart, Bell } from "lucide-react"
+import { useSearchStore } from "@/stores/search"
+import { Button, Badge } from "@/components/ui"
+import { ShoppingCart, Bell, Search } from "lucide-react"
 
 interface AppLayoutProps {
   children: React.ReactNode
@@ -15,6 +17,10 @@ export function AppLayout({ children }: AppLayoutProps) {
   const { toggleNotifications, getUnreadCount } = useNotificationStore()
   const cartCount = getCartCount()
   const unreadCount = getUnreadCount()
+  
+  const handleOpenSearch = () => {
+    useSearchStore.getState().openSearch();
+  }
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -24,6 +30,17 @@ export function AppLayout({ children }: AppLayoutProps) {
             <h1 className="text-lg sm:text-xl font-bold truncate">DataContract Catalog</h1>
           </div>
           <div className="flex items-center space-x-1 sm:space-x-2">
+            {/* Search Button */}
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleOpenSearch}
+              className="p-2"
+              aria-label="Search data catalog (Cmd+K)"
+            >
+              <Search className="h-4 w-4" />
+            </Button>
+            
             {/* Cart Button */}
             <Button
               variant="ghost"
@@ -73,14 +90,17 @@ export function AppLayout({ children }: AppLayoutProps) {
         {children}
       </main>
       
+      {/* Search Modal */}
+      <SearchModal />
+      
       {/* Notification Sidebar */}
       <NotificationSidebar />
       
       {/* Cart Sidebar */}
       <CartSidebar />
       
-      {/* Toast Notifications */}
-      <Toaster />
+      {/* Toast Notifications - Temporarily disabled */}
+      {/* <Toaster /> */}
     </div>
   )
 }

@@ -10,6 +10,7 @@ import { Breadcrumb } from '@/components/layout'
 import { ContractDetailSkeleton } from '@/components/loading'
 import { ErrorMessage, NetworkError, NotFoundError } from '@/components/error'
 import { OfflineBanner } from '@/components/offline'
+// import { ContextualSearch } from '@/components/search' // Temporarily disabled
 import { useOnlineStatus } from '@/hooks/use-online-status'
 import type { BreadcrumbItem } from '@/types'
 

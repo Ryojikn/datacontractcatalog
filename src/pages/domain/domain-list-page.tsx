@@ -4,6 +4,7 @@ import { DomainCard } from '@/components/domain'
 import { DomainCardSkeleton } from '@/components/loading'
 import { ErrorMessage, NetworkError } from '@/components/error'
 import { OfflineBanner } from '@/components/offline'
+import { SearchShortcut } from '@/components/search'
 import { useOnlineStatus } from '@/hooks/use-online-status'
 
 export function DomainListPage() {
@@ -22,10 +23,22 @@ export function DomainListPage() {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold">Data Domains</h1>
-        <p className="text-muted-foreground mt-2">
-          Browse through different data domains to explore collections and contracts
-        </p>
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h1 className="text-3xl font-bold">Data Domains</h1>
+            <p className="text-muted-foreground mt-2">
+              Browse through different data domains to explore collections and contracts
+            </p>
+          </div>
+        </div>
+        
+        {/* Search shortcut */}
+        <div className="max-w-md">
+          <SearchShortcut 
+            placeholder="Search domains, contracts, products..."
+            className="w-full"
+          />
+        </div>
       </div>
 
       <OfflineBanner />

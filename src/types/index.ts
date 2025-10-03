@@ -335,5 +335,229 @@ export interface FormState<T> {
   isDirty: boolean;
 }
 
+// Search and AI-related types
+export interface SearchQuery {
+  id: string;
+  query: string;
+  mode: 'traditional' | 'ai';
+  filters?: SearchFilters;
+  timestamp: string;
+  resultCount?: number;
+}
+
+export interface SearchFilters {
+  domains?: string[];
+  technologies?: string[];
+  dataTypes?: string[];
+  layers?: Layer[];
+  statuses?: Status[];
+  qualityScore?: {
+    min: number;
+    max: number;
+  };
+  lastUpdated?: {
+    from?: string;
+    to?: string;
+  };
+}
+
+export interface SearchResult {
+  id: string;
+  type: 'domain' | 'contract' | 'product';
+  title: string;
+  description: string;
+  relevanceScore: number;
+  metadata: SearchResultMetadata;
+  highlightedFields?: Record<string, string>;
+  actions: SearchResultAction[];
+}
+
+export interface SearchResultMetadata {
+  domain?: string;
+  collection?: string;
+  technology?: string;
+  layer?: Layer;
+  status?: Status;
+  lastUpdated?: string;
+  qualityScore?: number;
+  owner?: string;
+  tags?: string[];
+}
+
+export interface SearchResultAction {
+  id: string;
+  label: string;
+  type: 'navigate' | 'cart' | 'access' | 'preview' | 'compare' | 'bookmark';
+  icon?: string;
+  primary?: boolean;
+}
+
+export interface AIResponse {
+  id: string;
+  query: string;
+  type: 'discovery' | 'explanation' | 'recommendation' | 'comparison';
+  message: string;
+  cards: SearchResult[];
+  actions: AIResponseAction[];
+  followUpQuestions: string[];
+  relatedSearches: string[];
+  timestamp: string;
+  confidence?: number;
+}
+
+export interface AIResponseAction {
+  id: string;
+  label: string;
+  type: 'search' | 'navigate' | 'filter' | 'export';
+  payload?: Record<string, unknown>;
+}
+
+export interface SearchConversation {
+  id: string;
+  messages: ConversationMessage[];
+  createdAt: string;
+  updatedAt: string;
+  title?: string;
+}
+
+export interface ConversationMessage {
+  id: string;
+  type: 'user' | 'ai';
+  content: string;
+  timestamp: string;
+  query?: SearchQuery;
+  response?: AIResponse;
+}
+
+export interface SearchAnalytics {
+  queryId: string;
+  query: string;
+  mode: 'traditional' | 'ai';
+  resultCount: number;
+  clickedResults: string[];
+  timeSpent: number;
+  refinements: number;
+  successful: boolean;
+  timestamp: string;
+  userId?: string;
+}
+
+export interface SavedSearch {
+  id: string;
+  name: string;
+  query: string;
+  filters: SearchFilters;
+  mode: 'traditional' | 'ai';
+  createdAt: string;
+  lastUsed: string;
+  useCount: number;
+  alertEnabled: boolean;
+  alertFrequency?: 'daily' | 'weekly' | 'monthly';
+  tags: string[];
+}
+
+export interface SearchAlert {
+  id: string;
+  savedSearchId: string;
+  name: string;
+  query: string;
+  filters: SearchFilters;
+  frequency: 'daily' | 'weekly' | 'monthly';
+  lastTriggered?: string;
+  nextTrigger: string;
+  enabled: boolean;
+  resultThreshold: number;
+  notificationMethod: 'email' | 'in-app' | 'both';
+  createdAt: string;
+}
+
+export interface UserSearchPreferences {
+  userId: string;
+  defaultMode: 'traditional' | 'ai';
+  defaultFilters: SearchFilters;
+  favoriteCategories: string[];
+  recentDomains: string[];
+  searchHistory: SearchQuery[];
+  savedSearches: SavedSearch[];
+  searchAlerts: SearchAlert[];
+  personalizedSuggestions: boolean;
+  analyticsEnabled: boolean;
+  lastUpdated: string;
+}
+
+export interface SearchBookmark {
+  id: string;
+  resultId: string;
+  resultType: 'domain' | 'contract' | 'product';
+  title: string;
+  description: string;
+  tags: string[];
+  notes?: string;
+  createdAt: string;
+  lastAccessed: string;
+}
+
+export interface SearchSuggestion {
+  id: string;
+  text: string;
+  type: 'recent' | 'popular' | 'autocomplete' | 'related';
+  category?: string;
+  frequency?: number;
+}
+
+export interface SearchIndex {
+  domains: SearchIndexDomain[];
+  contracts: SearchIndexContract[];
+  products: SearchIndexProduct[];
+  lastUpdated: string;
+}
+
+export interface SearchIndexDomain {
+  id: string;
+  name: string;
+  description: string;
+  keywords: string[];
+  collections: string[];
+  contractCount: number;
+  productCount: number;
+}
+
+export interface SearchIndexContract {
+  id: string;
+  name: string;
+  description: string;
+  domain: string;
+  collection: string;
+  schema: SchemaField[];
+  qualityRules: string[];
+  tags: string[];
+  layer: Layer;
+  status: Status;
+  owner: string;
+  keywords: string[];
+}
+
+export interface SearchIndexProduct {
+  id: string;
+  name: string;
+  description: string;
+  technology: string;
+  contractId: string;
+  contractName: string;
+  domain: string;
+  purpose: string;
+  keywords: string[];
+  qualityScore?: number;
+  lastExecution?: string;
+}
+
+export interface SchemaField {
+  name: string;
+  type: string;
+  description?: string;
+  nullable: boolean;
+  primaryKey?: boolean;
+}
+
 // Export all types for easy importing
 // All interfaces and types are already exported above

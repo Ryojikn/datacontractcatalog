@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import type { Notification } from '@/types'
-import { toast } from '@/hooks/use-toast'
+// import { toast } from '@/hooks/use-toast' // Temporarily disabled
 
 interface NotificationStore {
   notifications: Notification[]
@@ -141,21 +141,13 @@ export const useNotificationStore = create<NotificationStore>()(
       addAccessApprovedWithToast: (productName: string, productId?: string) => {
         get().addAccessApprovedNotification(productName, productId)
         
-        toast({
-          title: "Access Approved! 🎉",
-          description: `Your access to ${productName} has been approved.`,
-          variant: "default"
-        })
+        console.log(`Access Approved! 🎉 - Your access to ${productName} has been approved.`)
       },
 
       addAccessRejectedWithToast: (productName: string, reason?: string, productId?: string) => {
         get().addAccessRejectedNotification(productName, reason, productId)
         
-        toast({
-          title: "Access Request Rejected",
-          description: `Your access request for ${productName} was rejected.`,
-          variant: "destructive"
-        })
+        console.log(`Access Request Rejected - Your access request for ${productName} was rejected.`)
       },
 
       markAsRead: (notificationId: string) => {

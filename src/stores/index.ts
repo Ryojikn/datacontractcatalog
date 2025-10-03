@@ -5,3 +5,4 @@ export * from './product';
 export * from './access';
 export * from './cart';
 export * from './notification';
+export * from './search';

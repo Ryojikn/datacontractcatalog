@@ -60,3 +60,5 @@ export {
   ToastAction,
 } from './toast'
 export { Toaster } from './toaster'
+export { Popover, PopoverTrigger, PopoverContent } from './popover'
+export { Separator } from './separator'

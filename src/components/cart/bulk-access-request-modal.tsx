@@ -20,7 +20,7 @@ import {
 import { useCartStore } from '@/stores/cart'
 import { useAccessRequestStore } from '@/stores/access'
 import { useNotificationStore } from '@/stores/notification'
-import { useToast } from '@/hooks/use-toast'
+// import { useToast } from '@/hooks/use-toast' // Temporarily disabled
 import { ChevronRight, Users, User } from 'lucide-react'
 
 
@@ -63,7 +63,7 @@ export function BulkAccessRequestModal({ open, onOpenChange }: BulkAccessRequest
   const { getSelectedItems, clearCart } = useCartStore()
   const { submitAccessRequest, loading } = useAccessRequestStore()
   const { addAccessPendingNotification } = useNotificationStore()
-  const { toast } = useToast()
+  // const { toast } = useToast() // Temporarily disabled
   const [currentStep, setCurrentStep] = useState<'form' | 'preview'>('form')
   const [formData, setFormData] = useState<FormData>({
     bdac: '',
@@ -129,11 +129,8 @@ export function BulkAccessRequestModal({ open, onOpenChange }: BulkAccessRequest
       setCurrentStep('form')
       onOpenChange(false)
       
-      // Show success toast
-      toast({
-        title: "Access Request Submitted",
-        description: `Successfully submitted access request for ${selectedItems.length} data products. You will be notified when approved.`,
-      })
+      // Show success message (toast temporarily disabled)
+      console.log(`Successfully submitted access request for ${selectedItems.length} data products. You will be notified when approved.`)
       
     } catch (error) {
       console.error('Failed to submit bulk access request:', error)

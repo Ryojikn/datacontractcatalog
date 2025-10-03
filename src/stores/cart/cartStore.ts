@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import type { CartItem, DataProduct } from '@/types'
-import { toast } from '@/hooks/use-toast'
+// import { toast } from '@/hooks/use-toast' // Temporarily disabled
 
 interface CartStore {
   items: CartItem[]
@@ -32,11 +32,7 @@ export const useCartStore = create<CartStore>()(
         
         if (existingItem) {
           // Item already in cart, don't add duplicate
-          toast({
-            title: "Already in cart",
-            description: `${product.name} is already in your cart.`,
-            variant: "default"
-          })
+          console.log(`${product.name} is already in your cart.`)
           return
         }
 
@@ -55,11 +51,7 @@ export const useCartStore = create<CartStore>()(
           items: [...state.items, newItem]
         }))
 
-        toast({
-          title: "Added to cart",
-          description: `${product.name} has been added to your cart.`,
-          variant: "default"
-        })
+        console.log(`${product.name} has been added to your cart.`)
       },
 
       removeFromCart: (productId: string) => {
@@ -70,11 +62,7 @@ export const useCartStore = create<CartStore>()(
         }))
 
         if (item) {
-          toast({
-            title: "Removed from cart",
-            description: `${item.productName} has been removed from your cart.`,
-            variant: "default"
-          })
+          console.log(`${item.productName} has been removed from your cart.`)
         }
       },
 
@@ -83,11 +71,7 @@ export const useCartStore = create<CartStore>()(
         set({ items: [] })
         
         if (itemCount > 0) {
-          toast({
-            title: "Cart cleared",
-            description: `All ${itemCount} item${itemCount !== 1 ? 's' : ''} removed from your cart.`,
-            variant: "default"
-          })
+          console.log(`All ${itemCount} item${itemCount !== 1 ? 's' : ''} removed from your cart.`)
         }
       },
 
