@@ -4,7 +4,8 @@ import {
   CollectionListPage, 
   ContractListPage, 
   ContractDetailPage, 
-  ProductDetailPage, 
+  ProductDetailPage,
+  DashboardPage,
   NotFoundPage 
 } from '@/pages'
 
@@ -23,6 +24,9 @@ export function AppRoutes() {
       
       {/* Product routes */}
       <Route path="/product/:productId" element={<ProductDetailPage />} />
+      
+      {/* Dashboard route */}
+      <Route path="/dashboard" element={<DashboardPage />} />
       
       {/* 404 route */}
       <Route path="*" element={<NotFoundPage />} />

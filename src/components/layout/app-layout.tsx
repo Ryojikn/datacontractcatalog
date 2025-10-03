@@ -7,12 +7,14 @@ import { useNotificationStore } from "@/stores/notification"
 import { useSearchStore } from "@/stores/search"
 import { Button, Badge } from "@/components/ui"
 import { ShoppingCart, Bell, Search, BarChart3 } from "lucide-react"
+import { useNavigate } from "react-router-dom"
 
 interface AppLayoutProps {
   children: React.ReactNode
 }
 
 export function AppLayout({ children }: AppLayoutProps) {
+  const navigate = useNavigate()
   const { toggleCart, getCartCount } = useCartStore()
   const { toggleNotifications, getUnreadCount } = useNotificationStore()
   const cartCount = getCartCount()
@@ -20,6 +22,14 @@ export function AppLayout({ children }: AppLayoutProps) {
   
   const handleOpenSearch = () => {
     useSearchStore.getState().openSearch();
+  }
+
+  const handleDashboardClick = () => {
+    // Close any open modals before navigating
+    useSearchStore.getState().closeSearch();
+    useCartStore.getState().closeCart();
+    useNotificationStore.getState().closeNotifications();
+    navigate('/dashboard');
   }
 
   return (
@@ -45,10 +55,7 @@ export function AppLayout({ children }: AppLayoutProps) {
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => {
-                // TODO: Implementar navegação para dashboard
-                console.log('Dashboard clicked - feature coming soon');
-              }}
+              onClick={handleDashboardClick}
               className="p-2"
               aria-label="Dashboard"
               title="Dashboard"

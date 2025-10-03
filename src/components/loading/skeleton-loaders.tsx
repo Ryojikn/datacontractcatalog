@@ -189,3 +189,135 @@ export const CardSkeleton = () => (
     <Skeleton className="h-4 w-1/2" />
   </div>
 );
+
+// Dashboard metrics skeleton loaders
+export const DashboardMetricsSkeleton = () => (
+  <div className="space-y-4">
+    {/* Main metric card skeleton */}
+    <div className="rounded-lg border bg-card p-4 sm:p-6">
+      <div className="flex items-center justify-between space-y-0 pb-2">
+        <Skeleton className="h-3 sm:h-4 w-24 sm:w-32" />
+        <Skeleton className="h-4 w-4 sm:h-5 sm:w-5 rounded" />
+      </div>
+      <div className="space-y-2">
+        <Skeleton className="h-6 sm:h-8 w-16 sm:w-20" />
+        <Skeleton className="h-3 w-32 sm:w-48" />
+      </div>
+    </div>
+
+    {/* Sub-metrics grid skeleton */}
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+      {Array.from({ length: 4 }).map((_, i) => (
+        <div key={i} className="rounded-lg border bg-card p-4 sm:p-6">
+          <div className="flex items-center justify-between space-y-0 pb-2">
+            <Skeleton className="h-3 sm:h-4 w-20 sm:w-24" />
+            <Skeleton className="h-4 w-4 sm:h-5 sm:w-5 rounded" />
+          </div>
+          <div className="space-y-2">
+            <Skeleton className="h-6 sm:h-8 w-12 sm:w-16" />
+            <Skeleton className="h-3 w-16 sm:w-20" />
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+// Contracts metrics skeleton
+export const ContractsMetricsSkeleton = () => (
+  <div className="space-y-4">
+    {/* Main card */}
+    <div className="rounded-lg border bg-card p-4 sm:p-6">
+      <div className="flex items-center justify-between space-y-0 pb-2">
+        <Skeleton className="h-3 sm:h-4 w-32 sm:w-40" />
+        <Skeleton className="h-4 w-4 sm:h-5 sm:w-5 rounded" />
+      </div>
+      <div className="space-y-2">
+        <Skeleton className="h-6 sm:h-8 w-12 sm:w-16" />
+        <Skeleton className="h-3 w-40 sm:w-56" />
+      </div>
+    </div>
+
+    {/* Status distribution cards */}
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      {Array.from({ length: 3 }).map((_, i) => (
+        <div key={i} className="rounded-lg border bg-card p-4 sm:p-6 border-l-4">
+          <div className="flex items-center justify-between space-y-0 pb-2">
+            <Skeleton className="h-3 sm:h-4 w-24 sm:w-28" />
+            <Skeleton className="h-4 w-4 sm:h-5 sm:w-5 rounded" />
+          </div>
+          <div className="space-y-2">
+            <Skeleton className="h-6 sm:h-8 w-10 sm:w-12" />
+            <Skeleton className="h-3 w-16 sm:w-20" />
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+// Products metrics skeleton
+export const ProductsMetricsSkeleton = () => (
+  <div className="space-y-4">
+    {/* Main card */}
+    <div className="rounded-lg border bg-card p-4 sm:p-6">
+      <div className="flex items-center justify-between space-y-0 pb-2">
+        <Skeleton className="h-3 sm:h-4 w-28 sm:w-36" />
+        <Skeleton className="h-4 w-4 sm:h-5 sm:w-5 rounded" />
+      </div>
+      <div className="space-y-2">
+        <Skeleton className="h-6 sm:h-8 w-12 sm:w-16" />
+        <Skeleton className="h-3 w-48 sm:w-64" />
+      </div>
+    </div>
+
+    {/* Environment distribution cards */}
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {Array.from({ length: 4 }).map((_, i) => (
+        <div key={i} className="rounded-lg border bg-card p-4 sm:p-6 border-l-4">
+          <div className="flex items-center justify-between space-y-0 pb-2">
+            <Skeleton className="h-3 sm:h-4 w-24 sm:w-32" />
+            <Skeleton className="h-4 w-4 sm:h-5 sm:w-5 rounded" />
+          </div>
+          <div className="space-y-2">
+            <Skeleton className="h-6 sm:h-8 w-10 sm:w-12" />
+            <Skeleton className="h-3 w-16 sm:w-20" />
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+// Users metrics skeleton
+export const UsersMetricsSkeleton = () => (
+  <div className="space-y-4">
+    {/* Main card */}
+    <div className="rounded-lg border bg-card p-4 sm:p-6">
+      <div className="flex items-center justify-between space-y-0 pb-2">
+        <Skeleton className="h-3 sm:h-4 w-20 sm:w-24" />
+        <Skeleton className="h-4 w-4 sm:h-5 sm:w-5 rounded" />
+      </div>
+      <div className="space-y-2">
+        <Skeleton className="h-6 sm:h-8 w-12 sm:w-16" />
+        <Skeleton className="h-3 w-36 sm:w-48" />
+      </div>
+    </div>
+
+    {/* Detail cards */}
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      {Array.from({ length: 2 }).map((_, i) => (
+        <div key={i} className="rounded-lg border bg-card p-4 sm:p-6 border-l-4">
+          <div className="flex items-center justify-between space-y-0 pb-2">
+            <Skeleton className="h-3 sm:h-4 w-24 sm:w-28" />
+            <Skeleton className="h-4 w-4 sm:h-5 sm:w-5 rounded" />
+          </div>
+          <div className="space-y-2">
+            <Skeleton className="h-6 sm:h-8 w-10 sm:w-12" />
+            <Skeleton className="h-3 w-24 sm:w-32" />
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+);

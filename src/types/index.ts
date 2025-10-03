@@ -206,6 +206,7 @@ export interface DataProduct {
   github: GitHubInfo;
   lastExecution?: ExecutionInfo;
   technology?: string;
+  environment?: 'dev' | 'pre' | 'pro' | 'undefined';
   deployments?: DeploymentInfo[];
   qualityAlerts?: QualityAlert[];
   description?: string;

@@ -1,4 +1,5 @@
 export * from './domain'
 export * from './contract'
 export * from './product'
+export * from './dashboard'
 export { NotFoundPage } from './not-found-page'

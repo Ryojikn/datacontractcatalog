@@ -13,17 +13,90 @@ import type {
   QualitySeverity
 } from '../types';
 
+import type {
+  DashboardData,
+  ContractMetrics,
+  ProductMetrics,
+  UserMetrics,
+  MetricTrend
+} from '../pages/dashboard/types/dashboard.types';
+
 // Simulate network delays and potential errors
 const simulateNetworkCall = async <T>(data: T, delay: number = 300): Promise<T> => {
   // Simulate network delay
   await new Promise(resolve => setTimeout(resolve, delay))
-  
+
   // Simulate occasional network errors (2% chance)
   if (Math.random() < 0.02) {
     throw new Error('Network error: Unable to connect to server')
   }
-  
+
   return data
+};
+
+// Generate realistic trend data based on metric type and current value
+const generateRealisticTrend = (metricType: 'contracts' | 'products' | 'users', currentValue: number): MetricTrend => {
+  // Define realistic trend patterns for each metric type
+  const trendPatterns = {
+    contracts: {
+      // Data contracts typically grow steadily with occasional dips during migrations
+      upProbability: 0.65,
+      stableProbability: 0.25,
+      maxGrowth: 15,
+      maxDecline: 8,
+      periods: ['mês anterior', 'últimas 4 semanas', 'período anterior']
+    },
+    products: {
+      // Data products grow more aggressively as platform adoption increases
+      upProbability: 0.70,
+      stableProbability: 0.20,
+      maxGrowth: 25,
+      maxDecline: 12,
+      periods: ['mês anterior', 'últimas 4 semanas', 'trimestre anterior']
+    },
+    users: {
+      // User growth is typically steady with seasonal variations
+      upProbability: 0.75,
+      stableProbability: 0.15,
+      maxGrowth: 30,
+      maxDecline: 5,
+      periods: ['mês anterior', 'últimas 6 semanas', 'período anterior']
+    }
+  };
+
+  const pattern = trendPatterns[metricType];
+  const random = Math.random();
+  
+  let direction: 'up' | 'down' | 'stable';
+  let percentage: number;
+  
+  if (random < pattern.upProbability) {
+    direction = 'up';
+    // Generate realistic growth percentage (weighted towards smaller values)
+    const growthFactor = Math.random() * Math.random(); // Bias towards smaller values
+    percentage = Math.ceil(growthFactor * pattern.maxGrowth) + 1;
+  } else if (random < pattern.upProbability + pattern.stableProbability) {
+    direction = 'stable';
+    percentage = Math.floor(Math.random() * 3); // 0-2% for stable
+  } else {
+    direction = 'down';
+    // Generate realistic decline percentage
+    const declineFactor = Math.random() * Math.random(); // Bias towards smaller values
+    percentage = -(Math.ceil(declineFactor * pattern.maxDecline) + 1);
+  }
+
+  // Calculate absolute value change based on percentage
+  const absoluteChange = Math.round((currentValue * Math.abs(percentage)) / 100);
+  
+  // Select random period
+  const period = pattern.periods[Math.floor(Math.random() * pattern.periods.length)];
+
+  return {
+    value: direction === 'down' ? -absoluteChange : absoluteChange,
+    direction,
+    period,
+    percentage: direction === 'stable' ? Math.abs(percentage) : percentage
+  };
 };
 
 // Mock data for banking domains
@@ -1832,6 +1905,7 @@ const mockDataProducts: DataProduct[] = [
     },
     lastExecution: mockExecutions[0],
     technology: 'Databricks Structured Streaming + Kafka',
+    environment: 'pro',
     deployments: mockDeployments,
     qualityAlerts: mockQualityAlerts.slice(0, 1),
     description: 'Pipeline de ingestão em tempo real para transações de cartões de crédito via Kafka streaming',
@@ -1875,6 +1949,7 @@ const mockDataProducts: DataProduct[] = [
     },
     lastExecution: mockExecutions[1],
     technology: 'Airflow + Databricks',
+    environment: 'dev',
     deployments: mockDeployments.slice(0, 2),
     qualityAlerts: [],
     description: 'Pipeline de ingestão batch para transações de cartões de débito com validação de qualidade',
@@ -1921,6 +1996,7 @@ const mockDataProducts: DataProduct[] = [
     },
     lastExecution: mockExecutions[2],
     technology: 'Databricks + Delta Lake',
+    environment: 'pre',
     deployments: mockDeployments,
     qualityAlerts: [],
     description: 'Pipeline de transformação para agregação de dados de cartões em diferentes granularidades',
@@ -1968,6 +2044,7 @@ const mockDataProducts: DataProduct[] = [
     },
     lastExecution: mockExecutions[3],
     technology: 'MLflow + Databricks ML',
+    environment: 'pro',
     deployments: mockDeployments,
     qualityAlerts: mockQualityAlerts.slice(0, 1),
     description: 'Modelo de machine learning para detecção de fraudes em tempo real em transações de cartões',
@@ -2009,6 +2086,7 @@ const mockDataProducts: DataProduct[] = [
     },
     lastExecution: mockExecutions[4],
     technology: 'MLflow + Scikit-learn',
+    environment: 'dev',
     deployments: mockDeployments.slice(0, 2),
     qualityAlerts: [],
     description: 'Modelo para cálculo de score de crédito de clientes baseado em histórico transacional',
@@ -2048,6 +2126,7 @@ const mockDataProducts: DataProduct[] = [
     },
     lastExecution: mockExecutions[5],
     technology: 'Power BI + Azure Analysis Services',
+    environment: 'pre',
     deployments: mockDeployments,
     qualityAlerts: [],
     description: 'Dashboard executivo com KPIs e métricas estratégicas do negócio de cartões',
@@ -2127,6 +2206,7 @@ const mockDataProducts: DataProduct[] = [
     },
     lastExecution: mockExecutions[7],
     technology: 'Airflow + Python',
+    environment: 'dev',
     deployments: mockDeployments,
     qualityAlerts: [],
     description: 'Pipeline de ingestão de apólices de seguros via API REST com validação de dados',
@@ -2169,6 +2249,7 @@ const mockDataProducts: DataProduct[] = [
     },
     lastExecution: mockExecutions[8],
     technology: 'Databricks + AWS Kinesis',
+    environment: 'pre',
     deployments: mockDeployments.slice(0, 2),
     qualityAlerts: mockQualityAlerts.slice(0, 1),
     description: 'Pipeline de ingestão em tempo real de sinistros via AWS Kinesis com enriquecimento de dados',
@@ -2217,6 +2298,7 @@ const mockDataProducts: DataProduct[] = [
     },
     lastExecution: mockExecutions[9],
     technology: 'Databricks + PySpark',
+    environment: 'pro',
     deployments: mockDeployments,
     qualityAlerts: [],
     description: 'Pipeline de transformação para geração de relatórios regulatórios da SUSEP',
@@ -3122,7 +3204,7 @@ export class MockDataService {
   async searchContracts(query: string): Promise<DataContract[]> {
     await this.delay(400);
     const lowerQuery = query.toLowerCase();
-    return mockDataContracts.filter(contract => 
+    return mockDataContracts.filter(contract =>
       contract.fundamentals.name.toLowerCase().includes(lowerQuery) ||
       contract.fundamentals.description?.toLowerCase().includes(lowerQuery)
     );
@@ -3131,10 +3213,94 @@ export class MockDataService {
   async searchProducts(query: string): Promise<DataProduct[]> {
     await this.delay(400);
     const lowerQuery = query.toLowerCase();
-    return mockDataProducts.filter(product => 
+    return mockDataProducts.filter(product =>
       product.name.toLowerCase().includes(lowerQuery) ||
       product.description?.toLowerCase().includes(lowerQuery)
     );
+  }
+
+  // Dashboard metrics operations
+  async getDashboardMetrics(): Promise<DashboardData> {
+    // Simulate network delay between 300-800ms
+    const delay = Math.floor(Math.random() * 500) + 300;
+
+    // Simulate occasional errors (5% chance)
+    if (Math.random() < 0.05) {
+      throw new Error('Dashboard service temporarily unavailable. Please try again.');
+    }
+
+    const [contracts, products, users] = await Promise.all([
+      this.getContractMetrics(),
+      this.getProductMetrics(),
+      this.getUserMetrics()
+    ]);
+
+    const dashboardData: DashboardData = {
+      contracts,
+      products,
+      users,
+      lastUpdated: new Date().toISOString()
+    };
+
+    return simulateNetworkCall(dashboardData, delay);
+  }
+
+  async getContractMetrics(): Promise<ContractMetrics> {
+    // Calculate metrics from mock data contracts
+    const total = mockDataContracts.length;
+
+    const byStatus = {
+      draft: mockDataContracts.filter(c => c.tags.status === 'draft').length,
+      published: mockDataContracts.filter(c => c.tags.status === 'published').length,
+      archived: mockDataContracts.filter(c => c.tags.status === 'archived').length
+    };
+
+    // Generate realistic trend data based on historical patterns
+    const trend: MetricTrend = generateRealisticTrend('contracts', total);
+
+    return simulateNetworkCall({
+      total,
+      byStatus,
+      trend
+    }, 200);
+  }
+
+  async getProductMetrics(): Promise<ProductMetrics> {
+    // Calculate metrics from mock data products
+    const total = mockDataProducts.length;
+
+    const byEnvironment = {
+      dev: mockDataProducts.filter(p => p.environment === 'dev').length,
+      pre: mockDataProducts.filter(p => p.environment === 'pre').length,
+      pro: mockDataProducts.filter(p => p.environment === 'pro').length,
+      undefined: mockDataProducts.filter(p => !p.environment || p.environment === 'undefined').length
+    };
+
+    // Generate realistic trend data based on historical patterns
+    const trend: MetricTrend = generateRealisticTrend('products', total);
+
+    return simulateNetworkCall({
+      total,
+      byEnvironment,
+      trend
+    }, 180);
+  }
+
+  async getUserMetrics(): Promise<UserMetrics> {
+    // Generate realistic user metrics based on platform size
+    const totalUsers = Math.floor(Math.random() * 500) + 150; // 150-650 users
+    const activeUsers = Math.floor(totalUsers * (0.6 + Math.random() * 0.3)); // 60-90% active
+    const totalGroups = Math.floor(Math.random() * 25) + 8; // 8-33 groups
+
+    // Generate realistic trend data based on historical patterns
+    const trend: MetricTrend = generateRealisticTrend('users', totalUsers);
+
+    return simulateNetworkCall({
+      totalUsers,
+      activeUsers,
+      totalGroups,
+      trend
+    }, 220);
   }
 }
 
