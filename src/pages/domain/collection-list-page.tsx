@@ -3,11 +3,24 @@ import { useParams, Navigate } from 'react-router-dom'
 import { useDomainStore } from '@/stores/domain'
 import { CollectionList } from '@/components/domain'
 import { Breadcrumb } from '@/components/layout'
+import { CollectionListSkeleton } from '@/components/loading'
+import { ErrorMessage, NetworkError, NotFoundError } from '@/components/error'
+import { OfflineBanner } from '@/components/offline'
+import { useOnlineStatus } from '@/hooks/use-online-status'
 import type { BreadcrumbItem } from '@/types'
 
 export function CollectionListPage() {
   const { domainId } = useParams<{ domainId: string }>()
-  const { domains, selectedDomain, loading, error, fetchDomains, selectDomain } = useDomainStore()
+  const { 
+    domains, 
+    selectedDomain, 
+    loading, 
+    error, 
+    fetchDomains, 
+    selectDomain,
+    clearError 
+  } = useDomainStore()
+  const isOnline = useOnlineStatus()
 
   // Load domains if not already loaded
   useEffect(() => {
@@ -27,17 +40,21 @@ export function CollectionListPage() {
     return <Navigate to="/" replace />
   }
 
+  const handleRetry = () => {
+    clearError()
+    if (domains.length === 0) {
+      fetchDomains()
+    } else if (domainId) {
+      selectDomain(domainId)
+    }
+  }
+
   // Show loading only when domains are being fetched for the first time
-  // Don't show loading when just selecting a domain from already loaded domains
   if (loading && domains.length === 0) {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="h-6 bg-muted animate-pulse rounded mb-6 w-64" />
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="h-32 bg-muted animate-pulse rounded-lg" />
-          ))}
-        </div>
+        <CollectionListSkeleton />
       </div>
     )
   }
@@ -45,8 +62,17 @@ export function CollectionListPage() {
   if (error) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <div className="text-center">
-          <p className="text-destructive">Error loading domain: {error}</p>
+        <OfflineBanner />
+        <div className="min-h-[400px]">
+          {!isOnline ? (
+            <NetworkError onRetry={handleRetry} />
+          ) : (
+            <ErrorMessage
+              title="Erro ao carregar domínio"
+              message={error}
+              onRetry={handleRetry}
+            />
+          )}
         </div>
       </div>
     )
@@ -56,7 +82,17 @@ export function CollectionListPage() {
   const currentDomain = selectedDomain || domains.find(d => d.id === domainId)
   
   if (!currentDomain) {
-    return <Navigate to="/" replace />
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <OfflineBanner />
+        <div className="min-h-[400px]">
+          <NotFoundError 
+            message="O domínio solicitado não foi encontrado."
+            onRetry={() => window.history.back()}
+          />
+        </div>
+      </div>
+    )
   }
 
   const breadcrumbItems: BreadcrumbItem[] = [
@@ -67,6 +103,8 @@ export function CollectionListPage() {
   return (
     <div className="container mx-auto px-4 py-8">
       <Breadcrumb items={breadcrumbItems} />
+      
+      <OfflineBanner />
       
       <div className="mb-8">
         <h1 className="text-3xl font-bold">{currentDomain.name}</h1>

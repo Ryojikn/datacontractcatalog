@@ -1,6 +1,8 @@
 import { useState, useEffect, useMemo } from 'react'
 import { Clock, CheckCircle, XCircle, AlertCircle, Filter, ArrowUpDown, ExternalLink } from 'lucide-react'
 import { Badge } from '@/components/ui'
+import { InlineError } from '@/components/error'
+import { useOnlineStatus } from '@/hooks/use-online-status'
 import { mockDataService } from '@/services/mockDataService'
 import type { DataProduct, ExecutionInfo, ExecutionStatus } from '@/types'
 
@@ -83,6 +85,7 @@ export function ExecutionsModule({ product }: ExecutionsModuleProps) {
   const [sortField, setSortField] = useState<SortField>('date')
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc')
   const [showFilters, setShowFilters] = useState(false)
+  const isOnline = useOnlineStatus()
 
   useEffect(() => {
     const fetchExecutions = async () => {
@@ -100,6 +103,22 @@ export function ExecutionsModule({ product }: ExecutionsModuleProps) {
 
     fetchExecutions()
   }, [product.id])
+
+  const handleRetry = () => {
+    setError(null)
+    const fetchExecutions = async () => {
+      try {
+        setLoading(true)
+        const executionHistory = await mockDataService.getExecutionHistory(product.id)
+        setExecutions(executionHistory)
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to load execution history')
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchExecutions()
+  }
 
   const filteredAndSortedExecutions = useMemo(() => {
     let filtered = executions
@@ -167,12 +186,13 @@ export function ExecutionsModule({ product }: ExecutionsModuleProps) {
     return (
       <div className="border rounded-lg p-4 bg-card">
         <div className="flex items-center gap-2 mb-4">
-          <XCircle className="h-4 w-4 text-red-600" />
+          <Clock className="h-4 w-4 text-muted-foreground" />
           <h3 className="font-semibold">Job Executions</h3>
         </div>
-        <div className="text-center py-6">
-          <p className="text-destructive text-sm">{error}</p>
-        </div>
+        <InlineError 
+          message={!isOnline ? "Sem conexão com a internet" : error}
+          onRetry={handleRetry}
+        />
       </div>
     )
   }

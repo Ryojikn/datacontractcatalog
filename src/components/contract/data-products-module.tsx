@@ -2,6 +2,8 @@ import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useProductStore } from '@/stores/product'
 import { Button, Badge } from '@/components/ui'
+import { InlineError } from '@/components/error'
+import { useOnlineStatus } from '@/hooks/use-online-status'
 import type { ExecutionStatus } from '@/types'
 
 interface DataProductsModuleProps {
@@ -10,7 +12,14 @@ interface DataProductsModuleProps {
 
 export function DataProductsModule({ contractId }: DataProductsModuleProps) {
   const navigate = useNavigate()
-  const { products, loading, error, fetchProductsByContract } = useProductStore()
+  const { 
+    products, 
+    loading, 
+    error, 
+    fetchProductsByContract,
+    clearError 
+  } = useProductStore()
+  const isOnline = useOnlineStatus()
 
   useEffect(() => {
     fetchProductsByContract(contractId)
@@ -18,6 +27,11 @@ export function DataProductsModule({ contractId }: DataProductsModuleProps) {
 
   const handleProductClick = (productId: string) => {
     navigate(`/product/${productId}`)
+  }
+
+  const handleRetry = () => {
+    clearError()
+    fetchProductsByContract(contractId)
   }
 
   const getExecutionStatusBadge = (status: ExecutionStatus) => {
@@ -78,10 +92,11 @@ export function DataProductsModule({ contractId }: DataProductsModuleProps) {
       )}
 
       {error && (
-        <div className="text-center py-8">
-          <p className="text-destructive text-sm mb-2">Error loading products</p>
-          <p className="text-muted-foreground text-xs">{error}</p>
-        </div>
+        <InlineError 
+          message={!isOnline ? "Sem conexão com a internet" : error}
+          onRetry={handleRetry}
+          className="mb-4"
+        />
       )}
 
       {!loading && !error && products.length === 0 && (

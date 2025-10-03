@@ -11,16 +11,27 @@ import { ExecutionsModule } from '@/components/product'
 import { QualityMonitorModule } from '@/components/product'
 import { AccessRequestStatus } from '@/components/product'
 import { Breadcrumb } from '@/components/layout'
+import { ProductDetailSkeleton } from '@/components/loading'
+import { ErrorMessage, NetworkError, NotFoundError } from '@/components/error'
+import { OfflineBanner } from '@/components/offline'
+import { useOnlineStatus } from '@/hooks/use-online-status'
 import { Tabs, TabsContent, TabsList, TabsTrigger, Button } from '@/components/ui'
 import { ShoppingCart, Check } from 'lucide-react'
 import type { BreadcrumbItem } from '@/types'
 
 export function ProductDetailPage() {
   const { productId } = useParams<{ productId: string }>()
-  const { selectedProduct, loading, error, selectProduct } = useProductStore()
+  const { 
+    selectedProduct, 
+    productLoading, 
+    productError, 
+    selectProduct,
+    clearProductError 
+  } = useProductStore()
   const { selectedContract, selectContract } = useContractStore()
   const { domains, fetchDomains } = useDomainStore()
   const { addToCart, isInCart, openCart } = useCartStore()
+  const isOnline = useOnlineStatus()
 
   useEffect(() => {
     if (domains.length === 0) {
@@ -44,29 +55,41 @@ export function ProductDetailPage() {
     return <Navigate to="/" replace />
   }
 
-  if (loading) {
+  const handleRetry = () => {
+    clearProductError()
+    if (productId) {
+      selectProduct(productId)
+    }
+  }
+
+  if (productLoading) {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="h-6 bg-muted animate-pulse rounded mb-6 w-96" />
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2">
-            <div className="h-96 bg-muted animate-pulse rounded-lg" />
-          </div>
-          <div className="space-y-6">
-            <div className="h-48 bg-muted animate-pulse rounded-lg" />
-            <div className="h-48 bg-muted animate-pulse rounded-lg" />
-            <div className="h-48 bg-muted animate-pulse rounded-lg" />
-          </div>
-        </div>
+        <ProductDetailSkeleton />
       </div>
     )
   }
 
-  if (error) {
+  if (productError) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <div className="text-center">
-          <p className="text-destructive">Error loading product: {error}</p>
+        <OfflineBanner />
+        <div className="min-h-[400px]">
+          {!isOnline ? (
+            <NetworkError onRetry={handleRetry} />
+          ) : productError.includes('not found') ? (
+            <NotFoundError 
+              message="O produto solicitado não foi encontrado."
+              onRetry={() => window.history.back()}
+            />
+          ) : (
+            <ErrorMessage
+              title="Erro ao carregar produto"
+              message={productError}
+              onRetry={handleRetry}
+            />
+          )}
         </div>
       </div>
     )
@@ -75,8 +98,12 @@ export function ProductDetailPage() {
   if (!selectedProduct) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <div className="text-center">
-          <p className="text-muted-foreground">Product not found</p>
+        <OfflineBanner />
+        <div className="min-h-[400px]">
+          <NotFoundError 
+            message="Produto não encontrado."
+            onRetry={() => window.history.back()}
+          />
         </div>
       </div>
     )
@@ -115,6 +142,8 @@ export function ProductDetailPage() {
   return (
     <div className="container mx-auto px-4 py-8">
       <Breadcrumb items={breadcrumbItems} />
+      
+      <OfflineBanner />
       
       <div className="mb-8">
         <h1 className="text-3xl font-bold">{selectedProduct.name}</h1>

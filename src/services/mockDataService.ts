@@ -13,6 +13,19 @@ import type {
   QualitySeverity
 } from '../types';
 
+// Simulate network delays and potential errors
+const simulateNetworkCall = async <T>(data: T, delay: number = 300): Promise<T> => {
+  // Simulate network delay
+  await new Promise(resolve => setTimeout(resolve, delay))
+  
+  // Simulate occasional network errors (2% chance)
+  if (Math.random() < 0.02) {
+    throw new Error('Network error: Unable to connect to server')
+  }
+  
+  return data
+};
+
 // Mock data for banking domains
 const mockDomains: Domain[] = [
   {
@@ -3030,61 +3043,71 @@ export class MockDataService {
 
   // Domain operations
   async getDomains(): Promise<Domain[]> {
-    await this.delay(300); // Simulate network delay
-    return [...mockDomains];
+    return simulateNetworkCall([...mockDomains], 300);
   }
 
   async getDomainById(id: string): Promise<Domain | null> {
-    await this.delay(200);
-    return mockDomains.find(domain => domain.id === id) || null;
+    const domain = mockDomains.find(domain => domain.id === id) || null;
+    if (!domain) {
+      throw new Error(`Domain with id ${id} not found`);
+    }
+    return simulateNetworkCall(domain, 200);
   }
 
   // Collection operations
   async getCollectionsByDomain(domainId: string): Promise<Collection[]> {
-    await this.delay(250);
-    return mockCollections.filter(collection => collection.domainId === domainId);
+    const collections = mockCollections.filter(collection => collection.domainId === domainId);
+    return simulateNetworkCall(collections, 250);
   }
 
   async getCollectionById(id: string): Promise<Collection | null> {
-    await this.delay(200);
-    return mockCollections.find(collection => collection.id === id) || null;
+    const collection = mockCollections.find(collection => collection.id === id) || null;
+    if (!collection) {
+      throw new Error(`Collection with id ${id} not found`);
+    }
+    return simulateNetworkCall(collection, 200);
   }
 
   // DataContract operations
   async getContractsByCollection(collectionId: string): Promise<DataContract[]> {
-    await this.delay(300);
     const collection = mockCollections.find(c => c.id === collectionId);
-    return collection?.contracts || [];
+    const contracts = collection?.contracts || [];
+    return simulateNetworkCall(contracts, 300);
   }
 
   async getContractById(id: string): Promise<DataContract | null> {
-    await this.delay(250);
-    return mockDataContracts.find(contract => contract.id === id) || null;
+    const contract = mockDataContracts.find(contract => contract.id === id) || null;
+    if (!contract) {
+      throw new Error(`Contract with id ${id} not found`);
+    }
+    return simulateNetworkCall(contract, 250);
   }
 
   // DataProduct operations
   async getProductsByContract(contractId: string): Promise<DataProduct[]> {
-    await this.delay(300);
-    return mockDataProducts.filter(product => product.dataContractId === contractId);
+    const products = mockDataProducts.filter(product => product.dataContractId === contractId);
+    return simulateNetworkCall(products, 300);
   }
 
   async getProductById(id: string): Promise<DataProduct | null> {
-    await this.delay(250);
-    return mockDataProducts.find(product => product.id === id) || null;
+    const product = mockDataProducts.find(product => product.id === id) || null;
+    if (!product) {
+      throw new Error(`Product with id ${id} not found`);
+    }
+    return simulateNetworkCall(product, 250);
   }
 
   // Quality and execution operations
   async getExecutionHistory(productId: string): Promise<ExecutionInfo[]> {
-    await this.delay(200);
     // Return mock executions for any product
     // In a real implementation, this would filter by productId
     console.log(`Getting execution history for product: ${productId}`);
-    return [...mockExecutions];
+    return simulateNetworkCall([...mockExecutions], 200);
   }
 
   async getQualityAlerts(productId: string): Promise<QualityAlert[]> {
-    await this.delay(200);
-    return mockQualityAlerts.filter(alert => alert.productId === productId);
+    const alerts = mockQualityAlerts.filter(alert => alert.productId === productId);
+    return simulateNetworkCall(alerts, 200);
   }
 
   async getDeployments(productId: string): Promise<DeploymentInfo[]> {

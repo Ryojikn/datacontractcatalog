@@ -7,12 +7,23 @@ import { ContractInfoPanel } from '@/components/contract'
 import { DataProductsModule } from '@/components/contract'
 import { QualityRulesModule } from '@/components/contract'
 import { Breadcrumb } from '@/components/layout'
+import { ContractDetailSkeleton } from '@/components/loading'
+import { ErrorMessage, NetworkError, NotFoundError } from '@/components/error'
+import { OfflineBanner } from '@/components/offline'
+import { useOnlineStatus } from '@/hooks/use-online-status'
 import type { BreadcrumbItem } from '@/types'
 
 export function ContractDetailPage() {
   const { contractId } = useParams<{ contractId: string }>()
-  const { selectedContract, loading, error, selectContract } = useContractStore()
+  const { 
+    selectedContract, 
+    contractLoading, 
+    contractError, 
+    selectContract,
+    clearContractError 
+  } = useContractStore()
   const { domains, fetchDomains } = useDomainStore()
+  const isOnline = useOnlineStatus()
 
   useEffect(() => {
     if (domains.length === 0) {
@@ -30,31 +41,41 @@ export function ContractDetailPage() {
     return <Navigate to="/" replace />
   }
 
-  if (loading) {
+  const handleRetry = () => {
+    clearContractError()
+    if (contractId) {
+      selectContract(contractId)
+    }
+  }
+
+  if (contractLoading) {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="h-6 bg-muted animate-pulse rounded mb-6 w-96" />
-        <div className="mb-8">
-          <div className="h-64 bg-muted animate-pulse rounded-lg" />
-        </div>
-        <div className="grid grid-cols-1 lg:grid-cols-10 gap-8">
-          <div className="lg:col-span-7 space-y-6">
-            <div className="h-96 bg-muted animate-pulse rounded-lg" />
-            <div className="h-64 bg-muted animate-pulse rounded-lg" />
-          </div>
-          <div className="lg:col-span-3">
-            <div className="h-48 bg-muted animate-pulse rounded-lg" />
-          </div>
-        </div>
+        <ContractDetailSkeleton />
       </div>
     )
   }
 
-  if (error) {
+  if (contractError) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <div className="text-center">
-          <p className="text-destructive">Error loading contract: {error}</p>
+        <OfflineBanner />
+        <div className="min-h-[400px]">
+          {!isOnline ? (
+            <NetworkError onRetry={handleRetry} />
+          ) : contractError.includes('not found') ? (
+            <NotFoundError 
+              message="O contrato solicitado não foi encontrado."
+              onRetry={() => window.history.back()}
+            />
+          ) : (
+            <ErrorMessage
+              title="Erro ao carregar contrato"
+              message={contractError}
+              onRetry={handleRetry}
+            />
+          )}
         </div>
       </div>
     )
@@ -63,8 +84,12 @@ export function ContractDetailPage() {
   if (!selectedContract) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <div className="text-center">
-          <p className="text-muted-foreground">Contract not found</p>
+        <OfflineBanner />
+        <div className="min-h-[400px]">
+          <NotFoundError 
+            message="Contrato não encontrado."
+            onRetry={() => window.history.back()}
+          />
         </div>
       </div>
     )
@@ -83,6 +108,8 @@ export function ContractDetailPage() {
   return (
     <div className="container mx-auto px-4 py-8">
       <Breadcrumb items={breadcrumbItems} />
+      
+      <OfflineBanner />
       
       <div className="mb-8">
         <h1 className="text-3xl font-bold">{selectedContract.fundamentals.name}</h1>

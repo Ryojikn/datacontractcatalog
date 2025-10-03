@@ -1,5 +1,6 @@
 export { Button } from './button'
 export { Badge } from './badge'
+export { Skeleton } from './skeleton'
 export { Tabs, TabsList, TabsTrigger, TabsContent } from './tabs'
 export { 
   Tooltip, 
