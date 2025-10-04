@@ -23,6 +23,7 @@ interface ProductState {
   deploymentsError: string | null;
   
   // Actions
+  fetchProducts: () => Promise<void>;
   fetchProductsByContract: (contractId: string) => Promise<void>;
   selectProduct: (id: string) => Promise<void>;
   fetchExecutionHistory: (productId: string) => Promise<void>;
@@ -55,6 +56,27 @@ export const useProductStore = create<ProductState>((set, get) => ({
   alertsError: null,
   deploymentsLoading: false,
   deploymentsError: null,
+
+  // Fetch all products
+  fetchProducts: async () => {
+    set({ loading: true, error: null });
+    
+    try {
+      const products = await mockDataService.getAllProducts();
+      set({ 
+        products,
+        loading: false,
+        error: null 
+      });
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to fetch products';
+      set({ 
+        loading: false, 
+        error: errorMessage,
+        products: [] 
+      });
+    }
+  },
 
   // Fetch products by contract ID
   fetchProductsByContract: async (contractId: string) => {
@@ -272,6 +294,7 @@ export const useDeploymentsError = () => useProductStore(state => state.deployme
 
 // Action hooks
 export const useProductActions = () => useProductStore(state => ({
+  fetchProducts: state.fetchProducts,
   fetchProductsByContract: state.fetchProductsByContract,
   selectProduct: state.selectProduct,
   fetchExecutionHistory: state.fetchExecutionHistory,

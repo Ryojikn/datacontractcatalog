@@ -9,7 +9,6 @@ import type {
   QualityAlert,
   Layer,
   Status,
-  ExecutionStatus,
   QualitySeverity
 } from '../types';
 
@@ -404,171 +403,8 @@ const mockQualityRules: QualityRule[] = [
   }
 ];
 
-// Mock execution info - comprehensive history with diverse technologies
-const mockExecutions: ExecutionInfo[] = [
-  // Streaming/Real-time executions
-  {
-    id: 'exec-001',
-    date: '2024-01-09T08:00:00Z',
-    status: 'success' as ExecutionStatus,
-    duration: 1200,
-    technology: 'Databricks Structured Streaming',
-    logs: 'Streaming job completed successfully. Processed 1,234,567 records in micro-batches.'
-  },
-  {
-    id: 'exec-002',
-    date: '2024-01-09T04:00:00Z',
-    status: 'success' as ExecutionStatus,
-    duration: 1150,
-    technology: 'Airflow + Python',
-    logs: 'ETL pipeline completed. API ingestion processed 1,198,432 policy records.'
-  },
-  {
-    id: 'exec-003',
-    date: '2024-01-09T00:00:00Z',
-    status: 'failure' as ExecutionStatus,
-    duration: 300,
-    technology: 'AWS Kinesis + Databricks',
-    errorMessage: 'Kinesis stream throttling detected. Retrying with exponential backoff.'
-  },
-  {
-    id: 'exec-004',
-    date: '2024-01-08T20:00:00Z',
-    status: 'success' as ExecutionStatus,
-    duration: 1089,
-    technology: 'Airflow + MySQL Connector',
-    logs: 'Batch ingestion completed. Processed 1,156,789 consortium payment records.'
-  },
-  {
-    id: 'exec-005',
-    date: '2024-01-08T16:00:00Z',
-    status: 'success' as ExecutionStatus,
-    duration: 1245,
-    technology: 'Databricks + Azure Data Lake',
-    logs: 'File processing completed. Processed 1,267,890 member update records from CSV.'
-  },
-  {
-    id: 'exec-006',
-    date: '2024-01-08T12:00:00Z',
-    status: 'running' as ExecutionStatus,
-    duration: 0,
-    technology: 'Bloomberg API + Databricks',
-    logs: 'Market data ingestion in progress. Current throughput: 5000 ticks/second.'
-  },
-  {
-    id: 'exec-007',
-    date: '2024-01-08T08:00:00Z',
-    status: 'success' as ExecutionStatus,
-    duration: 1178,
-    technology: 'Airflow + Oracle Connector',
-    logs: 'Portfolio positions sync completed. Processed 1,145,623 position records.'
-  },
-  {
-    id: 'exec-008',
-    date: '2024-01-08T04:00:00Z',
-    status: 'failure' as ExecutionStatus,
-    duration: 450,
-    technology: 'Databricks + PySpark',
-    errorMessage: 'SUSEP regulatory report generation failed: missing required fields in 15 records'
-  },
-  {
-    id: 'exec-009',
-    date: '2024-01-08T00:00:00Z',
-    status: 'success' as ExecutionStatus,
-    duration: 1067,
-    technology: 'Python + DEAP + MLflow',
-    logs: 'Genetic algorithm optimization completed. Generated 1,098,765 optimal group compositions.'
-  },
-  {
-    id: 'exec-010',
-    date: '2024-01-07T20:00:00Z',
-    status: 'success' as ExecutionStatus,
-    duration: 1234,
-    technology: 'MLflow + LightGBM',
-    logs: 'Default prediction model training completed. F1-score: 0.87, AUC: 0.92.'
-  },
-  {
-    id: 'exec-011',
-    date: '2024-01-07T16:00:00Z',
-    status: 'failure' as ExecutionStatus,
-    duration: 180,
-    technology: 'Python + CVXPY + MLflow',
-    errorMessage: 'Portfolio optimization failed: infeasible constraints detected in risk model.'
-  },
-  {
-    id: 'exec-012',
-    date: '2024-01-07T12:00:00Z',
-    status: 'success' as ExecutionStatus,
-    duration: 1156,
-    technology: 'Python + NumPy + MLflow',
-    logs: 'Monte Carlo risk simulation completed. Generated 10,000 scenarios for VaR calculation.'
-  },
-  {
-    id: 'exec-013',
-    date: '2024-01-07T08:00:00Z',
-    status: 'success' as ExecutionStatus,
-    duration: 1089,
-    technology: 'Power BI + Azure Functions',
-    logs: 'Client report generation completed. Generated 1,123,456 personalized investment reports.'
-  },
-  {
-    id: 'exec-014',
-    date: '2024-01-07T04:00:00Z',
-    status: 'success' as ExecutionStatus,
-    duration: 1198,
-    technology: 'Tableau + Databricks SQL',
-    logs: 'Dashboard refresh completed. Updated 1,198,765 data points across all visualizations.'
-  },
-  {
-    id: 'exec-015',
-    date: '2024-01-07T00:00:00Z',
-    status: 'failure' as ExecutionStatus,
-    duration: 600,
-    technology: 'Power BI + Databricks SQL',
-    errorMessage: 'Dashboard refresh failed: SQL query timeout on large aggregation table.'
-  },
-  // Additional executions for ML models
-  {
-    id: 'exec-016',
-    date: '2024-01-06T18:00:00Z',
-    status: 'success' as ExecutionStatus,
-    duration: 2400,
-    technology: 'MLflow + XGBoost',
-    logs: 'Fraud detection model retraining completed. New model deployed with 94% accuracy.'
-  },
-  {
-    id: 'exec-017',
-    date: '2024-01-06T14:00:00Z',
-    status: 'success' as ExecutionStatus,
-    duration: 3600,
-    technology: 'MLflow + Scikit-learn',
-    logs: 'Credit scoring model training completed. Cross-validation AUC: 0.89.'
-  },
-  {
-    id: 'exec-018',
-    date: '2024-01-06T10:00:00Z',
-    status: 'success' as ExecutionStatus,
-    duration: 1800,
-    technology: 'Python + Lifelines + MLflow',
-    logs: 'Actuarial survival model training completed. Concordance index: 0.78.'
-  },
-  {
-    id: 'exec-019',
-    date: '2024-01-06T06:00:00Z',
-    status: 'success' as ExecutionStatus,
-    duration: 2100,
-    technology: 'MLflow + Ensemble Methods',
-    logs: 'Claims fraud detection ensemble training completed. Precision: 0.91, Recall: 0.85.'
-  },
-  {
-    id: 'exec-020',
-    date: '2024-01-06T02:00:00Z',
-    status: 'success' as ExecutionStatus,
-    duration: 900,
-    technology: 'Databricks + QuantLib',
-    logs: 'Investment performance calculation completed. Risk metrics updated for all portfolios.'
-  }
-];
+// Import shared mock data
+import { mockExecutions, mockDeployments, mockQualityAlerts } from './mockDataShared';
 
 // Mock data contracts - Expanded with comprehensive Cartões domain
 const mockDataContracts: DataContract[] = [
@@ -659,7 +495,7 @@ const mockDataContracts: DataContract[] = [
     },
     qualityRules: mockQualityRules.slice(0, 5),
     tags: {
-      layer: 'Silver' as Layer,
+      layer: 'Bronze' as Layer,
       status: 'published' as Status,
       sensitivity: 'high',
       retention: '7years'
@@ -1043,7 +879,7 @@ const mockDataContracts: DataContract[] = [
     },
     qualityRules: [mockQualityRules[0], mockQualityRules[2]],
     tags: {
-      layer: 'Gold' as Layer,
+      layer: 'Bronze' as Layer,
       status: 'published' as Status,
       sensitivity: 'critical',
       retention: '30years'
@@ -1147,7 +983,7 @@ const mockDataContracts: DataContract[] = [
     },
     qualityRules: [mockQualityRules[0], mockQualityRules[2], mockQualityRules[5]],
     tags: {
-      layer: 'Silver' as Layer,
+      layer: 'Bronze' as Layer,
       status: 'published' as Status,
       sensitivity: 'high',
       retention: '10years'
@@ -1251,7 +1087,7 @@ const mockDataContracts: DataContract[] = [
     },
     qualityRules: [mockQualityRules[0], mockQualityRules[2]],
     tags: {
-      layer: 'Gold' as Layer,
+      layer: 'Silver' as Layer,
       status: 'published' as Status,
       sensitivity: 'high',
       retention: '15years'
@@ -1260,6 +1096,89 @@ const mockDataContracts: DataContract[] = [
       'data_retention': '15 anos após término da apólice',
       'access_level': 'Restrito a equipes de seguros residenciais',
       'update_frequency': 'Diário via batch'
+    }
+  },
+  {
+    id: 'dc-seguros-auto-sinistros-processados',
+    fundamentals: {
+      name: 'Sinistros Seguro Auto Processados',
+      version: '1.2.0',
+      owner: 'time-seguros-auto@banco.com',
+      domain: 'seguros',
+      collection: 'seguros-auto',
+      description: 'Contrato de dados para sinistros de seguro auto processados e enriquecidos',
+      createdAt: '2023-08-01T10:00:00Z',
+      updatedAt: '2024-01-05T14:30:00Z'
+    },
+    schema: {
+      tableName: 'seguros_auto_sinistros_processados',
+      columns: [
+        {
+          name: 'sinistro_id',
+          type: 'VARCHAR(50)',
+          nullable: false,
+          primaryKey: true,
+          description: 'Identificador único do sinistro processado'
+        },
+        {
+          name: 'apolice_numero',
+          type: 'VARCHAR(30)',
+          nullable: false,
+          description: 'Número da apólice relacionada'
+        },
+        {
+          name: 'valor_sinistro_processado',
+          type: 'DECIMAL(15,2)',
+          nullable: false,
+          description: 'Valor do sinistro após processamento e validações'
+        },
+        {
+          name: 'categoria_risco',
+          type: 'VARCHAR(20)',
+          nullable: false,
+          description: 'Categoria de risco calculada (baixo, medio, alto)'
+        },
+        {
+          name: 'score_fraude',
+          type: 'DECIMAL(5,4)',
+          nullable: true,
+          description: 'Score de probabilidade de fraude (0-1)'
+        },
+        {
+          name: 'status_processamento',
+          type: 'VARCHAR(30)',
+          nullable: false,
+          description: 'Status do processamento (processado, aprovado, rejeitado)'
+        },
+        {
+          name: 'data_processamento',
+          type: 'TIMESTAMP',
+          nullable: false,
+          description: 'Data e hora do processamento'
+        }
+      ],
+      dictionary: {
+        'sinistro_id': 'Chave primária única para sinistros processados',
+        'apolice_numero': 'Referência à apólice original',
+        'valor_sinistro_processado': 'Valor após aplicação de regras de negócio',
+        'categoria_risco': 'Classificação automática de risco',
+        'score_fraude': 'Probabilidade de fraude calculada por modelo ML',
+        'status_processamento': 'Estados: processado, aprovado, rejeitado, em_analise',
+        'data_processamento': 'Timestamp UTC do processamento'
+      },
+      primaryKeys: ['sinistro_id']
+    },
+    qualityRules: [mockQualityRules[2], mockQualityRules[3], mockQualityRules[5]],
+    tags: {
+      layer: 'Silver' as Layer,
+      status: 'published' as Status,
+      sensitivity: 'high',
+      retention: '15years'
+    },
+    terms: {
+      'data_retention': '15 anos após resolução do sinistro',
+      'access_level': 'Restrito a equipes de sinistros e auditoria',
+      'update_frequency': 'Tempo real via processamento de eventos'
     }
   },
   // CONSÓRCIO DOMAIN CONTRACTS
@@ -1700,1408 +1619,122 @@ const mockDataContracts: DataContract[] = [
       'access_level': 'Restrito a equipes de renda fixa e mesa de operações',
       'update_frequency': 'Intraday - atualização contínua de preços'
     }
+  },
+  // MODEL LAYER CONTRACT - For ML Model Training
+  {
+    id: 'dc-cartoes-fraud-model',
+    fundamentals: {
+      name: 'Modelo de Detecção de Fraude - Cartões',
+      version: '1.0.0',
+      owner: 'ml-team@banco.com',
+      domain: 'cartoes',
+      collection: 'cartoes-credito',
+      description: 'Contrato para modelo de machine learning de detecção de fraude em transações de cartão',
+      createdAt: '2023-08-01T10:00:00Z',
+      updatedAt: '2024-01-05T14:30:00Z'
+    },
+    schema: {
+      tableName: 'fraud_detection_model_artifacts',
+      columns: [
+        {
+          name: 'model_id',
+          type: 'VARCHAR(50)',
+          nullable: false,
+          primaryKey: true,
+          description: 'Identificador único do modelo'
+        },
+        {
+          name: 'model_version',
+          type: 'VARCHAR(20)',
+          nullable: false,
+          description: 'Versão do modelo treinado'
+        },
+        {
+          name: 'algorithm_type',
+          type: 'VARCHAR(50)',
+          nullable: false,
+          description: 'Tipo de algoritmo utilizado (gradient_boosting, random_forest, etc.)'
+        },
+        {
+          name: 'training_accuracy',
+          type: 'DECIMAL(5,4)',
+          nullable: false,
+          description: 'Acurácia do modelo no conjunto de treino'
+        },
+        {
+          name: 'validation_accuracy',
+          type: 'DECIMAL(5,4)',
+          nullable: false,
+          description: 'Acurácia do modelo no conjunto de validação'
+        },
+        {
+          name: 'model_artifact_path',
+          type: 'VARCHAR(500)',
+          nullable: false,
+          description: 'Caminho para o artefato do modelo serializado'
+        },
+        {
+          name: 'feature_importance',
+          type: 'JSON',
+          nullable: true,
+          description: 'Importância das features em formato JSON'
+        },
+        {
+          name: 'training_date',
+          type: 'TIMESTAMP',
+          nullable: false,
+          description: 'Data e hora do treinamento do modelo'
+        },
+        {
+          name: 'model_status',
+          type: 'VARCHAR(20)',
+          nullable: false,
+          description: 'Status do modelo (training, validated, deployed, retired)'
+        }
+      ],
+      dictionary: {
+        'model_id': 'Identificador único gerado para cada execução de treinamento',
+        'model_version': 'Versionamento semântico do modelo (ex: 1.2.3)',
+        'algorithm_type': 'Algoritmo de ML utilizado conforme biblioteca scikit-learn/xgboost',
+        'training_accuracy': 'Métrica de acurácia calculada no dataset de treino',
+        'validation_accuracy': 'Métrica de acurácia calculada no dataset de validação',
+        'model_artifact_path': 'Caminho no MLflow ou storage onde o modelo está armazenado',
+        'feature_importance': 'Ranking de importância das features para interpretabilidade',
+        'training_date': 'Timestamp UTC do início do processo de treinamento',
+        'model_status': 'Estados: training, validated, deployed, retired'
+      },
+      primaryKeys: ['model_id']
+    },
+    qualityRules: [mockQualityRules[0], mockQualityRules[2]],
+    tags: {
+      layer: 'Model' as Layer,
+      status: 'published' as Status,
+      sensitivity: 'medium',
+      retention: '2years'
+    },
+    terms: {
+      'data_retention': '2 anos para modelos e métricas de performance',
+      'access_level': 'Restrito a equipes de ML e cientistas de dados',
+      'update_frequency': 'Retreinamento mensal ou conforme performance degradar'
+    }
   }
 ];
 
-// Mock deployments
-const mockDeployments: DeploymentInfo[] = [
-  {
-    id: 'deploy-001',
-    date: '2024-01-09T12:00:00Z',
-    status: 'success' as ExecutionStatus,
-    environment: 'production',
-    version: 'v2.1.0',
-    deployedBy: 'github-actions',
-    githubRunId: '7234567890'
-  },
-  {
-    id: 'deploy-002',
-    date: '2024-01-08T15:30:00Z',
-    status: 'success' as ExecutionStatus,
-    environment: 'staging',
-    version: 'v2.1.0-rc1',
-    deployedBy: 'github-actions',
-    githubRunId: '7234567889'
-  },
-  {
-    id: 'deploy-003',
-    date: '2024-01-07T09:15:00Z',
-    status: 'failure' as ExecutionStatus,
-    environment: 'production',
-    version: 'v2.0.9',
-    deployedBy: 'github-actions',
-    githubRunId: '7234567888'
-  }
-];
-
-// Mock quality alerts - diverse alerts across domains
-const mockQualityAlerts: QualityAlert[] = [
-  // CARTÕES ALERTS
-  {
-    id: 'qa-001',
-    ruleId: 'qr-001',
-    ruleName: 'CPF Validation',
-    severity: 'high' as QualitySeverity,
-    message: '15 registros com CPF inválido detectados na última execução',
-    date: '2024-01-09T10:35:00Z',
-    resolved: false,
-    productId: 'dp-cartoes-ingestion-realtime'
-  },
-  {
-    id: 'qa-002',
-    ruleId: 'qr-003',
-    ruleName: 'Transaction Amount Range',
-    severity: 'medium' as QualitySeverity,
-    message: '3 transações com valores fora do range esperado',
-    date: '2024-01-08T14:20:00Z',
-    resolved: true,
-    productId: 'dp-fraud-detection-model'
-  },
-  // SEGUROS ALERTS
-  {
-    id: 'qa-003',
-    ruleId: 'qr-007',
-    ruleName: 'Policy Amount Validation',
-    severity: 'critical' as QualitySeverity,
-    message: '2 apólices com valores de cobertura acima do limite regulatório',
-    date: '2024-01-09T08:15:00Z',
-    resolved: false,
-    productId: 'dp-seguros-policy-ingestion'
-  },
-  {
-    id: 'qa-004',
-    ruleId: 'qr-009',
-    ruleName: 'Claim Amount Reasonableness',
-    severity: 'critical' as QualitySeverity,
-    message: '1 sinistro com valor superior à cobertura da apólice',
-    date: '2024-01-08T16:45:00Z',
-    resolved: false,
-    productId: 'dp-sinistros-streaming-ingestion'
-  },
-  {
-    id: 'qa-005',
-    ruleId: 'qr-010',
-    ruleName: 'Vehicle Year Validation',
-    severity: 'medium' as QualitySeverity,
-    message: '8 veículos com ano de fabricação inválido',
-    date: '2024-01-07T11:30:00Z',
-    resolved: true,
-    productId: 'dp-claims-fraud-detection'
-  },
-  // CONSÓRCIO ALERTS
-  {
-    id: 'qa-006',
-    ruleId: 'qr-012',
-    ruleName: 'Payment Amount Consistency',
-    severity: 'critical' as QualitySeverity,
-    message: '25 pagamentos com valores inconsistentes com parcela do grupo',
-    date: '2024-01-09T12:00:00Z',
-    resolved: false,
-    productId: 'dp-consorcio-payments-ingestion'
-  },
-  {
-    id: 'qa-007',
-    ruleId: 'qr-011',
-    ruleName: 'Group Participant Count',
-    severity: 'high' as QualitySeverity,
-    message: '1 grupo com número de participantes abaixo do mínimo',
-    date: '2024-01-08T09:20:00Z',
-    resolved: true,
-    productId: 'dp-consorcio-default-prediction'
-  },
-  // INVESTIMENTOS ALERTS
-  {
-    id: 'qa-008',
-    ruleId: 'qr-014',
-    ruleName: 'Fund NAV Validation',
-    severity: 'critical' as QualitySeverity,
-    message: '3 fundos com valores de cota negativos ou zerados',
-    date: '2024-01-09T17:30:00Z',
-    resolved: false,
-    productId: 'dp-investimentos-market-data-ingestion'
-  },
-  {
-    id: 'qa-009',
-    ruleId: 'qr-015',
-    ruleName: 'Investment Amount Consistency',
-    severity: 'critical' as QualitySeverity,
-    message: '12 posições com inconsistência entre quantidade e valor investido',
-    date: '2024-01-09T16:15:00Z',
-    resolved: false,
-    productId: 'dp-portfolio-positions-ingestion'
-  },
-  {
-    id: 'qa-010',
-    ruleId: 'qr-016',
-    ruleName: 'Maturity Date Validation',
-    severity: 'high' as QualitySeverity,
-    message: '5 títulos com data de vencimento no passado',
-    date: '2024-01-08T18:45:00Z',
-    resolved: true,
-    productId: 'dp-investment-risk-model'
-  },
-  // CROSS-DOMAIN ALERTS
-  {
-    id: 'qa-011',
-    ruleId: 'qr-019',
-    ruleName: 'Data Freshness Check',
-    severity: 'medium' as QualitySeverity,
-    message: 'Dados de 2 tabelas não foram atualizados nas últimas 24 horas',
-    date: '2024-01-09T06:00:00Z',
-    resolved: false,
-    productId: 'dp-cartoes-aggregation'
-  },
-  {
-    id: 'qa-012',
-    ruleId: 'qr-020',
-    ruleName: 'Record Count Anomaly Detection',
-    severity: 'low' as QualitySeverity,
-    message: 'Volume de dados 40% abaixo da média dos últimos 30 dias',
-    date: '2024-01-08T20:00:00Z',
-    resolved: true,
-    productId: 'dp-seguros-regulatory-reporting'
-  }
-];
-
-// Mock data products - Expanded with comprehensive Cartões domain products
-const mockDataProducts: DataProduct[] = [
-  // INGESTION PRODUCTS
-  {
-    id: 'dp-cartoes-ingestion-realtime',
-    name: 'Ingestão Transações Tempo Real',
-    dataContractId: 'dc-cartoes-transacoes',
-    configJson: {
-      source: {
-        type: 'kafka_stream',
-        topic: 'credit-card-transactions',
-        bootstrap_servers: 'kafka-prod-cluster:9092',
-        consumer_group: 'credit-card-ingestion'
-      },
-      target: {
-        type: 'delta_lake',
-        database: 'bronze_cartoes',
-        table: 'transacoes_raw',
-        checkpoint_location: '/mnt/checkpoints/credit-transactions'
-      },
-      processing: {
-        mode: 'streaming',
-        trigger: 'continuous',
-        max_files_per_trigger: 1000
-      },
-      schema_validation: true,
-      dead_letter_queue: 'credit-card-dlq'
-    },
-    github: {
-      repoName: 'cartoes-realtime-ingestion',
-      repoUrl: 'https://github.com/banco/cartoes-realtime-ingestion',
-      pagesUrl: 'https://ryojikn.github.io/mlflow-proxy/',
-      branch: 'main',
-      lastCommit: {
-        sha: 'f1e2d3c4b5a6',
-        message: 'fix: improve error handling for malformed messages',
-        date: '2024-01-08T10:15:00Z',
-        author: 'streaming-team@banco.com'
-      }
-    },
-    lastExecution: mockExecutions[0],
-    technology: 'Databricks Structured Streaming + Kafka',
-    environment: 'pro',
-    deployments: mockDeployments,
-    qualityAlerts: mockQualityAlerts.slice(0, 1),
-    description: 'Pipeline de ingestão em tempo real para transações de cartões de crédito via Kafka streaming',
-    createdAt: '2023-06-15T10:00:00Z',
-    updatedAt: '2024-01-08T10:15:00Z'
-  },
-  {
-    id: 'dp-debito-batch-ingestion',
-    name: 'Ingestão Batch Cartões Débito',
-    dataContractId: 'dc-debito-transacoes',
-    configJson: {
-      source: {
-        type: 'database',
-        connection: 'postgres-debit-prod',
-        table: 'debit_transactions',
-        incremental_column: 'updated_at',
-        batch_size: 50000
-      },
-      target: {
-        type: 'delta_lake',
-        database: 'bronze_cartoes',
-        table: 'debito_transacoes_raw',
-        partition_by: ['year', 'month', 'day']
-      },
-      schedule: {
-        frequency: 'hourly',
-        start_time: '00:05',
-        timezone: 'America/Sao_Paulo'
-      },
-      data_quality: {
-        null_checks: true,
-        duplicate_detection: true,
-        schema_evolution: 'strict'
-      }
-    },
-    github: {
-      repoName: 'debito-batch-ingestion',
-      repoUrl: 'https://github.com/banco/debito-batch-ingestion',
-      pagesUrl: 'https://ryojikn.github.io/mlflow-proxy/',
-      branch: 'main'
-    },
-    lastExecution: mockExecutions[1],
-    technology: 'Airflow + Databricks',
-    environment: 'dev',
-    deployments: mockDeployments.slice(0, 2),
-    qualityAlerts: [],
-    description: 'Pipeline de ingestão batch para transações de cartões de débito com validação de qualidade',
-    createdAt: '2023-04-20T12:00:00Z',
-    updatedAt: '2024-01-07T09:30:00Z'
-  },
-  // TRANSFORMATION PRODUCTS
-  {
-    id: 'dp-cartoes-aggregation',
-    name: 'Agregação Dados Cartões',
-    dataContractId: 'dc-cartoes-transacoes',
-    configJson: {
-      source: {
-        type: 'delta_lake',
-        database: 'silver_cartoes',
-        tables: ['transacoes', 'clientes']
-      },
-      transformations: {
-        daily_aggregations: {
-          group_by: ['customer_cpf', 'merchant_category'],
-          metrics: ['sum(amount)', 'count(*)', 'avg(amount)']
-        },
-        monthly_summaries: {
-          group_by: ['customer_cpf'],
-          metrics: ['total_spent', 'transaction_count', 'unique_merchants']
-        }
-      },
-      target: {
-        type: 'delta_lake',
-        database: 'gold_cartoes',
-        tables: ['daily_customer_summary', 'monthly_customer_summary']
-      },
-      schedule: {
-        frequency: 'daily',
-        start_time: '02:00',
-        timezone: 'America/Sao_Paulo'
-      }
-    },
-    github: {
-      repoName: 'cartoes-data-aggregation',
-      repoUrl: 'https://github.com/banco/cartoes-data-aggregation',
-      pagesUrl: 'https://ryojikn.github.io/mlflow-proxy/',
-      branch: 'main'
-    },
-    lastExecution: mockExecutions[2],
-    technology: 'Databricks + Delta Lake',
-    environment: 'pre',
-    deployments: mockDeployments,
-    qualityAlerts: [],
-    description: 'Pipeline de transformação para agregação de dados de cartões em diferentes granularidades',
-    createdAt: '2023-07-10T15:00:00Z',
-    updatedAt: '2024-01-05T14:30:00Z'
-  },
-  // ML MODEL PRODUCTS
-  {
-    id: 'dp-fraud-detection-model',
-    name: 'Modelo Detecção de Fraude',
-    dataContractId: 'dc-cartoes-transacoes',
-    configJson: {
-      model_type: 'gradient_boosting',
-      framework: 'xgboost',
-      features: [
-        'transaction_amount',
-        'merchant_category',
-        'hour_of_day',
-        'day_of_week',
-        'customer_avg_amount_30d',
-        'merchant_risk_score'
-      ],
-      target: 'is_fraud',
-      training: {
-        data_source: 'gold_cartoes.fraud_training_dataset',
-        validation_split: 0.2,
-        cross_validation_folds: 5
-      },
-      deployment: {
-        endpoint: 'fraud-detection-v2',
-        latency_sla: '100ms',
-        throughput_sla: '1000rps'
-      },
-      monitoring: {
-        drift_detection: true,
-        performance_tracking: true,
-        alert_threshold: 0.05
-      }
-    },
-    github: {
-      repoName: 'fraud-detection-model',
-      repoUrl: 'https://github.com/banco/fraud-detection-model',
-      pagesUrl: 'https://ryojikn.github.io/mlflow-proxy/',
-      branch: 'main'
-    },
-    lastExecution: mockExecutions[3],
-    technology: 'MLflow + Databricks ML',
-    environment: 'pro',
-    deployments: mockDeployments,
-    qualityAlerts: mockQualityAlerts.slice(0, 1),
-    description: 'Modelo de machine learning para detecção de fraudes em tempo real em transações de cartões',
-    createdAt: '2023-09-01T11:00:00Z',
-    updatedAt: '2024-01-04T16:20:00Z'
-  },
-  {
-    id: 'dp-credit-scoring-model',
-    name: 'Modelo Credit Scoring',
-    dataContractId: 'dc-cartoes-clientes',
-    configJson: {
-      model_type: 'logistic_regression',
-      framework: 'scikit-learn',
-      features: [
-        'income',
-        'age',
-        'account_tenure_months',
-        'avg_monthly_spending',
-        'payment_history_score',
-        'debt_to_income_ratio'
-      ],
-      target: 'default_probability',
-      training: {
-        data_source: 'gold_cartoes.credit_scoring_dataset',
-        sample_strategy: 'stratified',
-        feature_engineering: 'automated'
-      },
-      deployment: {
-        batch_scoring: true,
-        schedule: 'monthly',
-        output_table: 'gold_cartoes.customer_credit_scores'
-      }
-    },
-    github: {
-      repoName: 'credit-scoring-model',
-      repoUrl: 'https://github.com/banco/credit-scoring-model',
-      pagesUrl: 'https://ryojikn.github.io/mlflow-proxy/',
-      branch: 'main'
-    },
-    lastExecution: mockExecutions[4],
-    technology: 'MLflow + Scikit-learn',
-    environment: 'dev',
-    deployments: mockDeployments.slice(0, 2),
-    qualityAlerts: [],
-    description: 'Modelo para cálculo de score de crédito de clientes baseado em histórico transacional',
-    createdAt: '2023-10-15T09:00:00Z',
-    updatedAt: '2024-01-02T13:45:00Z'
-  },
-  // DASHBOARD PRODUCTS
-  {
-    id: 'dp-cartoes-executive-dashboard',
-    name: 'Dashboard Executivo Cartões',
-    dataContractId: 'dc-cartoes-transacoes',
-    configJson: {
-      data_sources: [
-        'gold_cartoes.daily_customer_summary',
-        'gold_cartoes.monthly_customer_summary',
-        'gold_cartoes.fraud_alerts'
-      ],
-      visualizations: {
-        kpis: ['total_volume', 'transaction_count', 'fraud_rate', 'approval_rate'],
-        charts: ['volume_trend', 'category_breakdown', 'geographic_distribution'],
-        tables: ['top_merchants', 'fraud_alerts', 'performance_metrics']
-      },
-      refresh_schedule: {
-        frequency: 'hourly',
-        cache_duration: '30min'
-      },
-      access_control: {
-        roles: ['executive', 'cards_manager', 'risk_analyst'],
-        row_level_security: false
-      }
-    },
-    github: {
-      repoName: 'cartoes-executive-dashboard',
-      repoUrl: 'https://github.com/banco/cartoes-executive-dashboard',
-      pagesUrl: 'https://ryojikn.github.io/mlflow-proxy/',
-      branch: 'main'
-    },
-    lastExecution: mockExecutions[5],
-    technology: 'Power BI + Azure Analysis Services',
-    environment: 'pre',
-    deployments: mockDeployments,
-    qualityAlerts: [],
-    description: 'Dashboard executivo com KPIs e métricas estratégicas do negócio de cartões',
-    createdAt: '2023-08-20T09:00:00Z',
-    updatedAt: '2024-01-03T11:15:00Z'
-  },
-  {
-    id: 'dp-fraud-monitoring-dashboard',
-    name: 'Dashboard Monitoramento Fraude',
-    dataContractId: 'dc-cartoes-transacoes',
-    configJson: {
-      data_sources: [
-        'gold_cartoes.fraud_predictions',
-        'gold_cartoes.fraud_investigations',
-        'silver_cartoes.real_time_alerts'
-      ],
-      real_time_updates: true,
-      alert_thresholds: {
-        fraud_rate_spike: 0.05,
-        model_performance_drop: 0.1,
-        investigation_backlog: 100
-      },
-      visualizations: {
-        real_time: ['fraud_rate_gauge', 'alert_stream', 'geographic_heatmap'],
-        historical: ['fraud_trends', 'model_performance', 'investigation_funnel']
-      }
-    },
-    github: {
-      repoName: 'fraud-monitoring-dashboard',
-      repoUrl: 'https://github.com/banco/fraud-monitoring-dashboard',
-      pagesUrl: 'https://ryojikn.github.io/mlflow-proxy/',
-      branch: 'main'
-    },
-    lastExecution: mockExecutions[6],
-    technology: 'Tableau + Databricks SQL',
-    deployments: mockDeployments.slice(0, 2),
-    qualityAlerts: [],
-    description: 'Dashboard em tempo real para monitoramento de fraudes e performance dos modelos de detecção',
-    createdAt: '2023-11-05T14:00:00Z',
-    updatedAt: '2024-01-01T08:30:00Z'
-  },
-  // SEGUROS DOMAIN PRODUCTS
-  // INGESTION PRODUCTS
-  {
-    id: 'dp-seguros-policy-ingestion',
-    name: 'Ingestão Apólices Seguros',
-    dataContractId: 'dc-seguros-vida-apolices',
-    configJson: {
-      source: {
-        type: 'api',
-        endpoint: 'https://api-seguros-prod.banco.com/policies',
-        authentication: 'oauth2',
-        rate_limit: '1000rps',
-        pagination: 'cursor_based'
-      },
-      target: {
-        type: 'delta_lake',
-        database: 'bronze_seguros',
-        table: 'apolices_raw',
-        partition_by: ['year', 'month']
-      },
-      schedule: {
-        frequency: 'every_4_hours',
-        start_time: '00:00',
-        timezone: 'America/Sao_Paulo'
-      },
-      data_validation: {
-        schema_validation: true,
-        business_rules: ['policy_amount > 0', 'start_date <= current_date']
-      }
-    },
-    github: {
-      repoName: 'seguros-policy-ingestion',
-      repoUrl: 'https://github.com/banco/seguros-policy-ingestion',
-      pagesUrl: 'https://ryojikn.github.io/mlflow-proxy/',
-      branch: 'main'
-    },
-    lastExecution: mockExecutions[7],
-    technology: 'Airflow + Python',
-    environment: 'dev',
-    deployments: mockDeployments,
-    qualityAlerts: [],
-    description: 'Pipeline de ingestão de apólices de seguros via API REST com validação de dados',
-    createdAt: '2023-03-10T10:00:00Z',
-    updatedAt: '2024-01-04T15:20:00Z'
-  },
-  {
-    id: 'dp-sinistros-streaming-ingestion',
-    name: 'Ingestão Streaming Sinistros',
-    dataContractId: 'dc-seguros-auto-sinistros',
-    configJson: {
-      source: {
-        type: 'kinesis_stream',
-        stream_name: 'insurance-claims-stream',
-        region: 'us-east-1',
-        shard_count: 10
-      },
-      target: {
-        type: 'delta_lake',
-        database: 'bronze_seguros',
-        table: 'sinistros_raw',
-        checkpoint_location: '/mnt/checkpoints/claims-stream'
-      },
-      processing: {
-        mode: 'streaming',
-        trigger: 'processingTime',
-        interval: '30 seconds'
-      },
-      enrichment: {
-        policy_lookup: true,
-        customer_data: true,
-        vehicle_data: true
-      }
-    },
-    github: {
-      repoName: 'sinistros-streaming-ingestion',
-      repoUrl: 'https://github.com/banco/sinistros-streaming-ingestion',
-      pagesUrl: 'https://ryojikn.github.io/mlflow-proxy/',
-      branch: 'main'
-    },
-    lastExecution: mockExecutions[8],
-    technology: 'Databricks + AWS Kinesis',
-    environment: 'pre',
-    deployments: mockDeployments.slice(0, 2),
-    qualityAlerts: mockQualityAlerts.slice(0, 1),
-    description: 'Pipeline de ingestão em tempo real de sinistros via AWS Kinesis com enriquecimento de dados',
-    createdAt: '2023-02-15T08:30:00Z',
-    updatedAt: '2024-01-09T12:45:00Z'
-  },
-  // TRANSFORMATION PRODUCTS
-  {
-    id: 'dp-seguros-regulatory-reporting',
-    name: 'Relatórios Regulatórios SUSEP',
-    dataContractId: 'dc-seguros-vida-apolices',
-    configJson: {
-      source: {
-        type: 'delta_lake',
-        database: 'silver_seguros',
-        tables: ['apolices', 'sinistros', 'premios']
-      },
-      transformations: {
-        susep_report_1: {
-          description: 'Relatório de provisões técnicas',
-          aggregations: ['sum(reserves)', 'count(policies)', 'avg(premium)'],
-          group_by: ['product_type', 'region']
-        },
-        susep_report_2: {
-          description: 'Relatório de sinistralidade',
-          calculations: ['claim_ratio', 'loss_ratio', 'expense_ratio'],
-          period: 'monthly'
-        }
-      },
-      target: {
-        type: 'delta_lake',
-        database: 'gold_seguros',
-        tables: ['susep_provisoes', 'susep_sinistralidade']
-      },
-      schedule: {
-        frequency: 'monthly',
-        day_of_month: 1,
-        start_time: '06:00'
-      }
-    },
-    github: {
-      repoName: 'seguros-regulatory-reporting',
-      repoUrl: 'https://github.com/banco/seguros-regulatory-reporting',
-      pagesUrl: 'https://ryojikn.github.io/mlflow-proxy/',
-      branch: 'main'
-    },
-    lastExecution: mockExecutions[9],
-    technology: 'Databricks + PySpark',
-    environment: 'pro',
-    deployments: mockDeployments,
-    qualityAlerts: [],
-    description: 'Pipeline de transformação para geração de relatórios regulatórios da SUSEP',
-    createdAt: '2023-04-01T12:00:00Z',
-    updatedAt: '2024-01-03T09:15:00Z'
-  },
-  // ML MODEL PRODUCTS
-  {
-    id: 'dp-actuarial-risk-model',
-    name: 'Modelo Risco Atuarial',
-    dataContractId: 'dc-seguros-vida-apolices',
-    configJson: {
-      model_type: 'survival_analysis',
-      framework: 'lifelines',
-      features: [
-        'age',
-        'gender',
-        'occupation',
-        'health_score',
-        'lifestyle_factors',
-        'family_history'
-      ],
-      target: 'mortality_probability',
-      training: {
-        data_source: 'gold_seguros.actuarial_dataset',
-        time_horizon: '30_years',
-        censoring_handling: 'kaplan_meier'
-      },
-      deployment: {
-        batch_scoring: true,
-        schedule: 'quarterly',
-        output_table: 'gold_seguros.mortality_predictions'
-      }
-    },
-    github: {
-      repoName: 'actuarial-risk-model',
-      repoUrl: 'https://github.com/banco/actuarial-risk-model',
-      pagesUrl: 'https://ryojikn.github.io/mlflow-proxy/',
-      branch: 'main'
-    },
-    lastExecution: mockExecutions[10],
-    technology: 'MLflow + Python Lifelines',
-    deployments: mockDeployments.slice(0, 2),
-    qualityAlerts: [],
-    description: 'Modelo atuarial para cálculo de risco e precificação de seguros de vida',
-    createdAt: '2023-06-01T10:00:00Z',
-    updatedAt: '2024-01-02T14:30:00Z'
-  },
-  {
-    id: 'dp-claims-fraud-detection',
-    name: 'Detecção Fraude Sinistros',
-    dataContractId: 'dc-seguros-auto-sinistros',
-    configJson: {
-      model_type: 'ensemble',
-      algorithms: ['random_forest', 'gradient_boosting', 'neural_network'],
-      features: [
-        'claim_amount',
-        'time_since_policy_start',
-        'customer_claim_history',
-        'vehicle_age',
-        'claim_location',
-        'weather_conditions'
-      ],
-      target: 'is_fraudulent',
-      training: {
-        data_source: 'gold_seguros.fraud_training_dataset',
-        imbalanced_handling: 'smote',
-        feature_selection: 'recursive_elimination'
-      },
-      deployment: {
-        real_time_scoring: true,
-        endpoint: 'claims-fraud-detection',
-        latency_sla: '200ms'
-      }
-    },
-    github: {
-      repoName: 'claims-fraud-detection',
-      repoUrl: 'https://github.com/banco/claims-fraud-detection',
-      pagesUrl: 'https://ryojikn.github.io/mlflow-proxy/',
-      branch: 'main'
-    },
-    lastExecution: mockExecutions[11],
-    technology: 'MLflow + Scikit-learn',
-    deployments: mockDeployments,
-    qualityAlerts: mockQualityAlerts.slice(0, 1),
-    description: 'Modelo ensemble para detecção de fraudes em sinistros de seguros automotivos',
-    createdAt: '2023-07-15T11:00:00Z',
-    updatedAt: '2024-01-05T16:45:00Z'
-  },
-  // DASHBOARD PRODUCTS
-  {
-    id: 'dp-seguros-claims-dashboard',
-    name: 'Dashboard Sinistros',
-    dataContractId: 'dc-seguros-auto-sinistros',
-    configJson: {
-      data_sources: [
-        'gold_seguros.claims_summary',
-        'gold_seguros.fraud_predictions',
-        'silver_seguros.claims_real_time'
-      ],
-      visualizations: {
-        kpis: ['total_claims', 'avg_claim_amount', 'fraud_rate', 'settlement_time'],
-        charts: ['claims_by_type', 'geographic_distribution', 'seasonal_trends'],
-        tables: ['high_value_claims', 'fraud_alerts', 'pending_investigations']
-      },
-      refresh_schedule: {
-        frequency: 'every_2_hours',
-        cache_duration: '1hour'
-      },
-      alerts: {
-        fraud_spike: 'fraud_rate > 5%',
-        high_value_claim: 'claim_amount > 100000',
-        settlement_delay: 'days_open > 30'
-      }
-    },
-    github: {
-      repoName: 'seguros-claims-dashboard',
-      repoUrl: 'https://github.com/banco/seguros-claims-dashboard',
-      pagesUrl: 'https://ryojikn.github.io/mlflow-proxy/',
-      branch: 'main'
-    },
-    lastExecution: mockExecutions[12],
-    technology: 'Tableau + Databricks SQL',
-    deployments: mockDeployments,
-    qualityAlerts: [],
-    description: 'Dashboard para monitoramento de sinistros com alertas de fraude e métricas operacionais',
-    createdAt: '2023-08-10T13:00:00Z',
-    updatedAt: '2024-01-04T10:20:00Z'
-  },
-  {
-    id: 'dp-seguros-business-intelligence',
-    name: 'BI Seguros Executivo',
-    dataContractId: 'dc-seguros-vida-apolices',
-    configJson: {
-      data_sources: [
-        'gold_seguros.policy_analytics',
-        'gold_seguros.premium_analysis',
-        'gold_seguros.customer_segmentation'
-      ],
-      visualizations: {
-        executive_summary: ['revenue_trend', 'policy_growth', 'customer_acquisition'],
-        product_analysis: ['product_performance', 'profitability_analysis', 'market_share'],
-        risk_analysis: ['loss_ratios', 'reserve_adequacy', 'risk_concentration']
-      },
-      refresh_schedule: {
-        frequency: 'daily',
-        start_time: '05:00'
-      },
-      access_control: {
-        roles: ['c_level', 'insurance_director', 'actuarial_manager'],
-        data_masking: false
-      }
-    },
-    github: {
-      repoName: 'seguros-business-intelligence',
-      repoUrl: 'https://github.com/banco/seguros-business-intelligence',
-      pagesUrl: 'https://ryojikn.github.io/mlflow-proxy/',
-      branch: 'main'
-    },
-    lastExecution: mockExecutions[13],
-    technology: 'Power BI + Azure Synapse',
-    deployments: mockDeployments.slice(0, 2),
-    qualityAlerts: [],
-    description: 'Dashboard executivo com análises estratégicas e KPIs do negócio de seguros',
-    createdAt: '2023-09-20T15:00:00Z',
-    updatedAt: '2024-01-01T12:00:00Z'
-  },
-  // CONSÓRCIO DOMAIN PRODUCTS
-  // INGESTION PRODUCTS
-  {
-    id: 'dp-consorcio-payments-ingestion',
-    name: 'Ingestão Pagamentos Consórcio',
-    dataContractId: 'dc-consorcio-veiculos-participantes',
-    configJson: {
-      source: {
-        type: 'database',
-        connection: 'mysql-consorcio-prod',
-        tables: ['payments', 'participants', 'groups'],
-        incremental_strategy: 'timestamp',
-        batch_size: 10000
-      },
-      target: {
-        type: 'delta_lake',
-        database: 'bronze_consorcio',
-        table: 'pagamentos_raw',
-        partition_by: ['year', 'month']
-      },
-      schedule: {
-        frequency: 'every_2_hours',
-        start_time: '00:15',
-        timezone: 'America/Sao_Paulo'
-      },
-      data_quality: {
-        completeness_checks: true,
-        referential_integrity: true,
-        duplicate_detection: true
-      }
-    },
-    github: {
-      repoName: 'consorcio-payments-ingestion',
-      repoUrl: 'https://github.com/banco/consorcio-payments-ingestion',
-      pagesUrl: 'https://ryojikn.github.io/mlflow-proxy/',
-      branch: 'main'
-    },
-    lastExecution: mockExecutions[0],
-    technology: 'Airflow + MySQL Connector',
-    deployments: mockDeployments,
-    qualityAlerts: [],
-    description: 'Pipeline de ingestão de pagamentos e dados de participantes de consórcios',
-    createdAt: '2023-02-01T11:30:00Z',
-    updatedAt: '2024-01-07T16:20:00Z'
-  },
-  {
-    id: 'dp-consorcio-member-management',
-    name: 'Gestão Membros Consórcio',
-    dataContractId: 'dc-consorcio-imoveis-grupos',
-    configJson: {
-      source: {
-        type: 'file_system',
-        path: '/mnt/consorcio/member_updates/',
-        file_format: 'csv',
-        schema_inference: false,
-        delimiter: ';'
-      },
-      target: {
-        type: 'delta_lake',
-        database: 'bronze_consorcio',
-        table: 'membros_atualizacoes',
-        merge_strategy: 'upsert'
-      },
-      processing: {
-        file_pattern: 'member_updates_*.csv',
-        archive_processed: true,
-        error_handling: 'quarantine'
-      },
-      schedule: {
-        frequency: 'daily',
-        start_time: '01:00',
-        timezone: 'America/Sao_Paulo'
-      }
-    },
-    github: {
-      repoName: 'consorcio-member-management',
-      repoUrl: 'https://github.com/banco/consorcio-member-management',
-      pagesUrl: 'https://ryojikn.github.io/mlflow-proxy/',
-      branch: 'main'
-    },
-    lastExecution: mockExecutions[1],
-    technology: 'Databricks + Azure Data Lake',
-    deployments: mockDeployments.slice(0, 2),
-    qualityAlerts: [],
-    description: 'Pipeline para processamento de atualizações de membros via arquivos CSV',
-    createdAt: '2023-01-15T09:00:00Z',
-    updatedAt: '2024-01-08T14:15:00Z'
-  },
-  // TRANSFORMATION PRODUCTS
-  {
-    id: 'dp-consorcio-financial-reporting',
-    name: 'Relatórios Financeiros Consórcio',
-    dataContractId: 'dc-consorcio-veiculos-participantes',
-    configJson: {
-      source: {
-        type: 'delta_lake',
-        database: 'silver_consorcio',
-        tables: ['pagamentos', 'grupos', 'participantes']
-      },
-      transformations: {
-        monthly_collections: {
-          group_by: ['group_id', 'month'],
-          metrics: ['sum(paid_amount)', 'count(payments)', 'avg(installment)']
-        },
-        delinquency_analysis: {
-          calculations: ['days_overdue', 'default_probability', 'recovery_rate'],
-          filters: ['status != "quit"']
-        },
-        group_performance: {
-          group_by: ['group_id'],
-          metrics: ['collection_rate', 'contemplation_rate', 'profitability']
-        }
-      },
-      target: {
-        type: 'delta_lake',
-        database: 'gold_consorcio',
-        tables: ['monthly_collections', 'delinquency_report', 'group_performance']
-      },
-      schedule: {
-        frequency: 'monthly',
-        day_of_month: 2,
-        start_time: '03:00'
-      }
-    },
-    github: {
-      repoName: 'consorcio-financial-reporting',
-      repoUrl: 'https://github.com/banco/consorcio-financial-reporting',
-      pagesUrl: 'https://ryojikn.github.io/mlflow-proxy/',
-      branch: 'main'
-    },
-    lastExecution: mockExecutions[2],
-    technology: 'Databricks + PySpark',
-    deployments: mockDeployments,
-    qualityAlerts: [],
-    description: 'Pipeline de transformação para relatórios financeiros e análise de performance',
-    createdAt: '2023-03-20T10:00:00Z',
-    updatedAt: '2024-01-05T12:30:00Z'
-  },
-  // ML MODEL PRODUCTS
-  {
-    id: 'dp-consorcio-group-optimization',
-    name: 'Otimização Formação Grupos',
-    dataContractId: 'dc-consorcio-imoveis-grupos',
-    configJson: {
-      model_type: 'optimization',
-      algorithm: 'genetic_algorithm',
-      objective: 'maximize_group_success_rate',
-      constraints: [
-        'min_participants >= 50',
-        'max_participants <= 200',
-        'credit_value_variance < 0.1'
-      ],
-      features: [
-        'participant_credit_score',
-        'income_level',
-        'age_distribution',
-        'geographic_concentration',
-        'payment_history'
-      ],
-      optimization_criteria: {
-        success_rate_weight: 0.4,
-        profitability_weight: 0.3,
-        risk_distribution_weight: 0.3
-      },
-      deployment: {
-        batch_execution: true,
-        schedule: 'weekly',
-        output_table: 'gold_consorcio.optimal_group_compositions'
-      }
-    },
-    github: {
-      repoName: 'consorcio-group-optimization',
-      repoUrl: 'https://github.com/banco/consorcio-group-optimization',
-      pagesUrl: 'https://ryojikn.github.io/mlflow-proxy/',
-      branch: 'main'
-    },
-    lastExecution: mockExecutions[3],
-    technology: 'Python + DEAP + MLflow',
-    deployments: mockDeployments.slice(0, 2),
-    qualityAlerts: [],
-    description: 'Modelo de otimização para formação de grupos de consórcio com máxima taxa de sucesso',
-    createdAt: '2023-05-10T14:00:00Z',
-    updatedAt: '2024-01-03T11:45:00Z'
-  },
-  {
-    id: 'dp-consorcio-default-prediction',
-    name: 'Predição Inadimplência Consórcio',
-    dataContractId: 'dc-consorcio-veiculos-participantes',
-    configJson: {
-      model_type: 'classification',
-      algorithm: 'lightgbm',
-      features: [
-        'payment_history_score',
-        'income_to_installment_ratio',
-        'age',
-        'employment_stability',
-        'previous_consortium_experience',
-        'economic_indicators'
-      ],
-      target: 'will_default_next_3_months',
-      training: {
-        data_source: 'gold_consorcio.default_training_dataset',
-        time_series_split: true,
-        feature_engineering: 'automated'
-      },
-      deployment: {
-        batch_scoring: true,
-        schedule: 'monthly',
-        output_table: 'gold_consorcio.default_predictions',
-        threshold_optimization: 'f1_score'
-      }
-    },
-    github: {
-      repoName: 'consorcio-default-prediction',
-      repoUrl: 'https://github.com/banco/consorcio-default-prediction',
-      pagesUrl: 'https://ryojikn.github.io/mlflow-proxy/',
-      branch: 'main'
-    },
-    lastExecution: mockExecutions[4],
-    technology: 'MLflow + LightGBM',
-    deployments: mockDeployments,
-    qualityAlerts: mockQualityAlerts.slice(0, 1),
-    description: 'Modelo para predição de inadimplência de participantes de consórcio',
-    createdAt: '2023-06-25T16:00:00Z',
-    updatedAt: '2024-01-04T09:20:00Z'
-  },
-  // DASHBOARD PRODUCTS
-  {
-    id: 'dp-consorcio-operations-dashboard',
-    name: 'Dashboard Operacional Consórcio',
-    dataContractId: 'dc-consorcio-imoveis-grupos',
-    configJson: {
-      data_sources: [
-        'gold_consorcio.group_performance',
-        'gold_consorcio.monthly_collections',
-        'silver_consorcio.real_time_payments'
-      ],
-      visualizations: {
-        kpis: ['active_groups', 'total_participants', 'collection_rate', 'contemplation_rate'],
-        charts: ['payment_trends', 'group_formation', 'geographic_distribution'],
-        tables: ['top_performing_groups', 'delinquent_participants', 'upcoming_contemplations']
-      },
-      refresh_schedule: {
-        frequency: 'every_4_hours',
-        cache_duration: '2hours'
-      },
-      alerts: {
-        low_collection_rate: 'collection_rate < 85%',
-        high_delinquency: 'delinquency_rate > 10%',
-        group_formation_delay: 'days_to_formation > 30'
-      }
-    },
-    github: {
-      repoName: 'consorcio-operations-dashboard',
-      repoUrl: 'https://github.com/banco/consorcio-operations-dashboard',
-      pagesUrl: 'https://ryojikn.github.io/mlflow-proxy/',
-      branch: 'main'
-    },
-    lastExecution: mockExecutions[5],
-    technology: 'Power BI + Databricks SQL',
-    deployments: mockDeployments,
-    qualityAlerts: [],
-    description: 'Dashboard operacional para monitoramento de grupos e performance de consórcios',
-    createdAt: '2023-04-15T12:00:00Z',
-    updatedAt: '2024-01-02T15:30:00Z'
-  },
-  {
-    id: 'dp-consorcio-member-analytics',
-    name: 'Analytics Participantes',
-    dataContractId: 'dc-consorcio-veiculos-participantes',
-    configJson: {
-      data_sources: [
-        'gold_consorcio.participant_analytics',
-        'gold_consorcio.default_predictions',
-        'gold_consorcio.contemplation_analysis'
-      ],
-      visualizations: {
-        member_insights: ['payment_behavior', 'risk_segmentation', 'satisfaction_scores'],
-        predictive_analytics: ['default_probability', 'contemplation_likelihood', 'churn_risk'],
-        portfolio_analysis: ['member_demographics', 'product_preferences', 'lifetime_value']
-      },
-      refresh_schedule: {
-        frequency: 'daily',
-        start_time: '06:00'
-      },
-      access_control: {
-        roles: ['consorcio_manager', 'risk_analyst', 'customer_success'],
-        row_level_security: true
-      }
-    },
-    github: {
-      repoName: 'consorcio-member-analytics',
-      repoUrl: 'https://github.com/banco/consorcio-member-analytics',
-      pagesUrl: 'https://ryojikn.github.io/mlflow-proxy/',
-      branch: 'main'
-    },
-    lastExecution: mockExecutions[6],
-    technology: 'Tableau + Databricks SQL',
-    deployments: mockDeployments.slice(0, 2),
-    qualityAlerts: [],
-    description: 'Dashboard analítico para insights sobre participantes e comportamento de pagamento',
-    createdAt: '2023-07-30T11:00:00Z',
-    updatedAt: '2024-01-06T14:45:00Z'
-  },
-  // INVESTIMENTOS DOMAIN PRODUCTS
-  // INGESTION PRODUCTS
-  {
-    id: 'dp-investimentos-market-data-ingestion',
-    name: 'Ingestão Dados Mercado',
-    dataContractId: 'dc-investimentos-fundos-cotas',
-    configJson: {
-      source: {
-        type: 'market_data_feed',
-        provider: 'bloomberg_api',
-        endpoints: ['equity_prices', 'bond_prices', 'fund_nav'],
-        authentication: 'api_key',
-        rate_limit: '5000rps'
-      },
-      target: {
-        type: 'delta_lake',
-        database: 'bronze_investimentos',
-        table: 'market_data_raw',
-        partition_by: ['date', 'asset_class']
-      },
-      processing: {
-        mode: 'streaming',
-        trigger: 'continuous',
-        watermark: '10 minutes'
-      },
-      data_enrichment: {
-        currency_conversion: true,
-        benchmark_calculation: true,
-        volatility_metrics: true
-      }
-    },
-    github: {
-      repoName: 'investimentos-market-data-ingestion',
-      repoUrl: 'https://github.com/banco/investimentos-market-data-ingestion',
-      pagesUrl: 'https://ryojikn.github.io/mlflow-proxy/',
-      branch: 'main'
-    },
-    lastExecution: mockExecutions[7],
-    technology: 'Databricks + Bloomberg API',
-    deployments: mockDeployments,
-    qualityAlerts: [],
-    description: 'Pipeline de ingestão em tempo real de dados de mercado via Bloomberg API',
-    createdAt: '2023-01-10T08:00:00Z',
-    updatedAt: '2024-01-09T13:30:00Z'
-  },
-  {
-    id: 'dp-portfolio-positions-ingestion',
-    name: 'Ingestão Posições Carteira',
-    dataContractId: 'dc-investimentos-renda-fixa-posicoes',
-    configJson: {
-      source: {
-        type: 'database',
-        connection: 'oracle-portfolio-prod',
-        tables: ['positions', 'transactions', 'securities'],
-        incremental_column: 'last_updated',
-        parallel_jobs: 8
-      },
-      target: {
-        type: 'delta_lake',
-        database: 'bronze_investimentos',
-        table: 'posicoes_raw',
-        partition_by: ['year', 'month', 'security_type']
-      },
-      schedule: {
-        frequency: 'every_30_minutes',
-        business_hours_only: true,
-        timezone: 'America/Sao_Paulo'
-      },
-      data_quality: {
-        position_reconciliation: true,
-        price_validation: true,
-        exposure_limits_check: true
-      }
-    },
-    github: {
-      repoName: 'portfolio-positions-ingestion',
-      repoUrl: 'https://github.com/banco/portfolio-positions-ingestion',
-      pagesUrl: 'https://ryojikn.github.io/mlflow-proxy/',
-      branch: 'main'
-    },
-    lastExecution: mockExecutions[8],
-    technology: 'Airflow + Oracle Connector',
-    deployments: mockDeployments.slice(0, 2),
-    qualityAlerts: mockQualityAlerts.slice(0, 1),
-    description: 'Pipeline de ingestão de posições de carteira com reconciliação automática',
-    createdAt: '2023-03-05T10:30:00Z',
-    updatedAt: '2024-01-08T11:45:00Z'
-  },
-  // TRANSFORMATION PRODUCTS
-  {
-    id: 'dp-investimentos-performance-calculation',
-    name: 'Cálculo Performance Investimentos',
-    dataContractId: 'dc-investimentos-fundos-cotas',
-    configJson: {
-      source: {
-        type: 'delta_lake',
-        database: 'silver_investimentos',
-        tables: ['posicoes', 'precos', 'benchmarks']
-      },
-      calculations: {
-        returns: {
-          daily_returns: true,
-          cumulative_returns: true,
-          risk_adjusted_returns: true
-        },
-        risk_metrics: {
-          volatility: 'annualized',
-          var_calculation: '95_confidence',
-          sharpe_ratio: true,
-          max_drawdown: true
-        },
-        attribution: {
-          sector_attribution: true,
-          security_selection: true,
-          asset_allocation: true
-        }
-      },
-      target: {
-        type: 'delta_lake',
-        database: 'gold_investimentos',
-        tables: ['performance_metrics', 'risk_analytics', 'attribution_analysis']
-      },
-      schedule: {
-        frequency: 'daily',
-        start_time: '18:00',
-        timezone: 'America/Sao_Paulo'
-      }
-    },
-    github: {
-      repoName: 'investimentos-performance-calculation',
-      repoUrl: 'https://github.com/banco/investimentos-performance-calculation',
-      pagesUrl: 'https://ryojikn.github.io/mlflow-proxy/',
-      branch: 'main'
-    },
-    lastExecution: mockExecutions[9],
-    technology: 'Databricks + QuantLib',
-    deployments: mockDeployments,
-    qualityAlerts: [],
-    description: 'Pipeline para cálculo de performance e métricas de risco de investimentos',
-    createdAt: '2023-04-12T14:00:00Z',
-    updatedAt: '2024-01-07T10:15:00Z'
-  },
-  // ML MODEL PRODUCTS
-  {
-    id: 'dp-portfolio-optimization-model',
-    name: 'Modelo Otimização Carteira',
-    dataContractId: 'dc-investimentos-fundos-cotas',
-    configJson: {
-      model_type: 'portfolio_optimization',
-      algorithm: 'mean_variance_optimization',
-      objective: 'maximize_sharpe_ratio',
-      constraints: [
-        'max_weight_per_asset <= 0.1',
-        'sector_concentration <= 0.3',
-        'minimum_liquidity >= 1000000'
-      ],
-      features: [
-        'expected_returns',
-        'covariance_matrix',
-        'liquidity_scores',
-        'esg_ratings',
-        'market_cap'
-      ],
-      optimization_parameters: {
-        risk_aversion: 'moderate',
-        rebalancing_frequency: 'monthly',
-        transaction_costs: true
-      },
-      deployment: {
-        batch_execution: true,
-        schedule: 'weekly',
-        output_table: 'gold_investimentos.optimal_portfolios'
-      }
-    },
-    github: {
-      repoName: 'portfolio-optimization-model',
-      repoUrl: 'https://github.com/banco/portfolio-optimization-model',
-      pagesUrl: 'https://ryojikn.github.io/mlflow-proxy/',
-      branch: 'main'
-    },
-    lastExecution: mockExecutions[10],
-    technology: 'Python + CVXPY + MLflow',
-    deployments: mockDeployments.slice(0, 2),
-    qualityAlerts: [],
-    description: 'Modelo de otimização de carteiras usando teoria moderna de portfólio',
-    createdAt: '2023-05-20T09:00:00Z',
-    updatedAt: '2024-01-04T15:30:00Z'
-  },
-  {
-    id: 'dp-investment-risk-model',
-    name: 'Modelo Risco Investimentos',
-    dataContractId: 'dc-investimentos-renda-fixa-posicoes',
-    configJson: {
-      model_type: 'risk_modeling',
-      methodology: 'monte_carlo_simulation',
-      risk_factors: [
-        'interest_rate_risk',
-        'credit_risk',
-        'liquidity_risk',
-        'market_risk',
-        'concentration_risk'
-      ],
-      scenarios: {
-        base_case: 'current_market_conditions',
-        stress_scenarios: ['recession', 'inflation_spike', 'credit_crisis'],
-        monte_carlo_runs: 10000
-      },
-      outputs: {
-        var_estimates: ['1_day', '10_day', '1_month'],
-        expected_shortfall: true,
-        scenario_analysis: true
-      },
-      deployment: {
-        batch_execution: true,
-        schedule: 'daily',
-        output_table: 'gold_investimentos.risk_metrics'
-      }
-    },
-    github: {
-      repoName: 'investment-risk-model',
-      repoUrl: 'https://github.com/banco/investment-risk-model',
-      pagesUrl: 'https://ryojikn.github.io/mlflow-proxy/',
-      branch: 'main'
-    },
-    lastExecution: mockExecutions[11],
-    technology: 'Python + NumPy + MLflow',
-    deployments: mockDeployments,
-    qualityAlerts: mockQualityAlerts.slice(0, 1),
-    description: 'Modelo de risco para cálculo de VaR e análise de cenários de investimentos',
-    createdAt: '2023-06-30T11:00:00Z',
-    updatedAt: '2024-01-05T13:45:00Z'
-  },
-  // DASHBOARD PRODUCTS
-  {
-    id: 'dp-investimentos-client-reporting',
-    name: 'Relatórios Clientes Investimentos',
-    dataContractId: 'dc-investimentos-fundos-cotas',
-    configJson: {
-      data_sources: [
-        'gold_investimentos.client_positions',
-        'gold_investimentos.performance_metrics',
-        'gold_investimentos.market_commentary'
-      ],
-      report_types: {
-        monthly_statement: {
-          sections: ['position_summary', 'performance_analysis', 'market_outlook'],
-          format: 'pdf',
-          personalization: true
-        },
-        quarterly_review: {
-          sections: ['portfolio_review', 'risk_analysis', 'recommendations'],
-          format: 'interactive_dashboard',
-          benchmark_comparison: true
-        }
-      },
-      generation_schedule: {
-        monthly_reports: 'first_business_day',
-        quarterly_reports: 'within_5_days_quarter_end'
-      },
-      distribution: {
-        email_delivery: true,
-        portal_access: true,
-        mobile_app: true
-      }
-    },
-    github: {
-      repoName: 'investimentos-client-reporting',
-      repoUrl: 'https://github.com/banco/investimentos-client-reporting',
-      pagesUrl: 'https://ryojikn.github.io/mlflow-proxy/',
-      branch: 'main'
-    },
-    lastExecution: mockExecutions[12],
-    technology: 'Power BI + Azure Functions',
-    deployments: mockDeployments,
-    qualityAlerts: [],
-    description: 'Sistema de geração automática de relatórios personalizados para clientes',
-    createdAt: '2023-07-15T16:00:00Z',
-    updatedAt: '2024-01-03T09:30:00Z'
-  },
-  {
-    id: 'dp-investimentos-risk-dashboard',
-    name: 'Dashboard Risco Investimentos',
-    dataContractId: 'dc-investimentos-renda-fixa-posicoes',
-    configJson: {
-      data_sources: [
-        'gold_investimentos.risk_metrics',
-        'gold_investimentos.var_estimates',
-        'silver_investimentos.real_time_positions'
-      ],
-      visualizations: {
-        risk_overview: ['portfolio_var', 'risk_decomposition', 'concentration_analysis'],
-        stress_testing: ['scenario_analysis', 'sensitivity_analysis', 'correlation_heatmap'],
-        monitoring: ['limit_utilization', 'risk_alerts', 'model_performance']
-      },
-      real_time_updates: true,
-      alert_thresholds: {
-        var_breach: 'daily_var > limit',
-        concentration_risk: 'single_issuer_exposure > 10%',
-        model_accuracy: 'backtest_exceptions > 5'
-      },
-      refresh_schedule: {
-        frequency: 'every_15_minutes',
-        business_hours_only: true
-      }
-    },
-    github: {
-      repoName: 'investimentos-risk-dashboard',
-      repoUrl: 'https://github.com/banco/investimentos-risk-dashboard',
-      pagesUrl: 'https://ryojikn.github.io/mlflow-proxy/',
-      branch: 'main'
-    },
-    lastExecution: mockExecutions[13],
-    technology: 'Tableau + Databricks SQL',
-    deployments: mockDeployments.slice(0, 2),
-    qualityAlerts: [],
-    description: 'Dashboard em tempo real para monitoramento de risco de carteiras de investimento',
-    createdAt: '2023-08-25T12:00:00Z',
-    updatedAt: '2024-01-02T14:20:00Z'
-  }
-];
-
+// Mock data products imported from separate file
 // Populate collections with contracts
 mockCollections[0].contracts = [mockDataContracts[0], mockDataContracts[1]]; // cartoes-credito
 mockCollections[1].contracts = [mockDataContracts[2]]; // cartoes-debito  
 mockCollections[2].contracts = [mockDataContracts[3]]; // cartoes-pre-pago
 mockCollections[3].contracts = [mockDataContracts[4]]; // seguros-vida
-mockCollections[4].contracts = [mockDataContracts[5]]; // seguros-auto
+mockCollections[4].contracts = [mockDataContracts[5], mockDataContracts[7]]; // seguros-auto (sinistros + processados)
 mockCollections[5].contracts = [mockDataContracts[6]]; // seguros-residencial
-mockCollections[6].contracts = [mockDataContracts[7]]; // consorcio-imoveis
-mockCollections[7].contracts = [mockDataContracts[8]]; // consorcio-veiculos
-mockCollections[8].contracts = [mockDataContracts[9]]; // fundos-investimento
-mockCollections[9].contracts = [mockDataContracts[10]]; // renda-fixa
+mockCollections[6].contracts = [mockDataContracts[8]]; // consorcio-imoveis
+mockCollections[7].contracts = [mockDataContracts[9]]; // consorcio-veiculos
+mockCollections[8].contracts = [mockDataContracts[10]]; // fundos-investimento
+mockCollections[9].contracts = [mockDataContracts[11]]; // renda-fixa
+
+// Import products after all other definitions to avoid circular dependency
+import { mockDataProducts } from './mockDataProducts';
 
 // Populate domains with their respective collections
 mockDomains.forEach(domain => {
@@ -3151,6 +1784,10 @@ export class MockDataService {
   }
 
   // DataContract operations
+  async getAllContracts(): Promise<DataContract[]> {
+    return simulateNetworkCall([...mockDataContracts], 300);
+  }
+
   async getContractsByCollection(collectionId: string): Promise<DataContract[]> {
     const collection = mockCollections.find(c => c.id === collectionId);
     const contracts = collection?.contracts || [];
@@ -3166,6 +1803,10 @@ export class MockDataService {
   }
 
   // DataProduct operations
+  async getAllProducts(): Promise<DataProduct[]> {
+    return simulateNetworkCall([...mockDataProducts], 300);
+  }
+
   async getProductsByContract(contractId: string): Promise<DataProduct[]> {
     const products = mockDataProducts.filter(product => product.dataContractId === contractId);
     return simulateNetworkCall(products, 300);

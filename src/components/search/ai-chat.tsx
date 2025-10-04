@@ -51,7 +51,8 @@ export function AIChat() {
             id: card.id,
             name: card.title,
             dataContractId: card.id,
-            configJson: {},
+            pipelineType: 'processing' as const,
+            configJson: { type: 'processing' as const },
             github: { repoName: '', repoUrl: '', pagesUrl: '' },
             technology: card.metadata.technology,
             description: card.description

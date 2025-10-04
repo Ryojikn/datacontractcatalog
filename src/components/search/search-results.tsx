@@ -71,7 +71,8 @@ export function SearchResults() {
             id: result.id,
             name: result.title,
             dataContractId: result.id, // Use result.id as fallback
-            configJson: {},
+            pipelineType: 'processing' as const,
+            configJson: { type: 'processing' as const },
             github: {
               repoName: '',
               repoUrl: '',

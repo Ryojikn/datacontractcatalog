@@ -14,6 +14,7 @@ interface ContractState {
   contractError: string | null;
   
   // Actions
+  fetchContracts: () => Promise<void>;
   fetchContractsByCollection: (collectionId: string) => Promise<void>;
   selectContract: (id: string) => Promise<void>;
   searchContracts: (query: string) => Promise<void>;
@@ -31,6 +32,27 @@ export const useContractStore = create<ContractState>((set) => ({
   error: null,
   contractLoading: false,
   contractError: null,
+
+  // Fetch all contracts
+  fetchContracts: async () => {
+    set({ loading: true, error: null });
+    
+    try {
+      const contracts = await mockDataService.getAllContracts();
+      set({ 
+        contracts,
+        loading: false,
+        error: null 
+      });
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to fetch contracts';
+      set({ 
+        loading: false, 
+        error: errorMessage,
+        contracts: [] 
+      });
+    }
+  },
 
   // Fetch contracts by collection ID
   fetchContractsByCollection: async (collectionId: string) => {
@@ -143,6 +165,7 @@ export const useContractDetailError = () => useContractStore(state => state.cont
 
 // Action hooks
 export const useContractActions = () => useContractStore(state => ({
+  fetchContracts: state.fetchContracts,
   fetchContractsByCollection: state.fetchContractsByCollection,
   selectContract: state.selectContract,
   searchContracts: state.searchContracts,

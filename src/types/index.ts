@@ -5,12 +5,16 @@ export const EXECUTION_STATUS_VALUES = ['success', 'failure', 'running'] as cons
 export const QUALITY_SEVERITY_VALUES = ['low', 'medium', 'high', 'critical'] as const;
 export const ACCESS_REQUEST_STATUS_VALUES = ['pending', 'approved_by_access_group', 'approved_by_product_owner', 'approved', 'rejected'] as const;
 
+// Pipeline type constants
+export const PIPELINE_TYPES = ['ingestion', 'processing', 'model_inference', 'model_training', 'model_serving'] as const;
+
 // Type definitions from constants
 export type Layer = typeof LAYER_VALUES[number];
 export type Status = typeof STATUS_VALUES[number];
 export type ExecutionStatus = typeof EXECUTION_STATUS_VALUES[number];
 export type QualitySeverity = typeof QUALITY_SEVERITY_VALUES[number];
 export type AccessRequestStatus = typeof ACCESS_REQUEST_STATUS_VALUES[number];
+export type PipelineType = typeof PIPELINE_TYPES[number];
 
 // Core domain interfaces
 export interface Domain {
@@ -197,12 +201,39 @@ export interface Notification {
   createdAt: string;
 }
 
+// Pipeline configuration interfaces
+export interface PipelineConfig {
+  type?: PipelineType; // Made optional for backward compatibility
+  source?: {
+    type?: string;
+    [key: string]: unknown;
+  };
+  target?: {
+    type?: string;
+    [key: string]: unknown;
+  };
+  model?: {
+    type?: string;
+    artifact_path?: string;
+    [key: string]: unknown;
+  };
+  endpoint?: {
+    type?: string;
+    url?: string;
+    [key: string]: unknown;
+  };
+  processing?: Record<string, unknown>;
+  schedule?: Record<string, unknown>;
+  [key: string]: unknown;
+}
+
 // Main data product interface
 export interface DataProduct {
   id: string;
   name: string;
   dataContractId: string;
-  configJson: Record<string, unknown>;
+  pipelineType?: PipelineType; // Made optional for backward compatibility
+  configJson: PipelineConfig;
   github: GitHubInfo;
   lastExecution?: ExecutionInfo;
   technology?: string;

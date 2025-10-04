@@ -2,10 +2,12 @@ import { useEffect } from 'react'
 import { useParams, Navigate } from 'react-router-dom'
 import { useContractStore } from '@/stores/contract'
 import { useDomainStore } from '@/stores/domain'
+import { useProductStore } from '@/stores/product'
 import { SchemaVisualizer } from '@/components/contract'
 import { ContractInfoPanel } from '@/components/contract'
 import { DataProductsModule } from '@/components/contract'
 import { QualityRulesModule } from '@/components/contract'
+
 import { Breadcrumb } from '@/components/layout'
 import { ContractDetailSkeleton } from '@/components/loading'
 import { ErrorMessage, NetworkError, NotFoundError } from '@/components/error'
@@ -24,13 +26,17 @@ export function ContractDetailPage() {
     clearContractError 
   } = useContractStore()
   const { domains, fetchDomains } = useDomainStore()
+  const { products, fetchProducts } = useProductStore()
   const isOnline = useOnlineStatus()
 
   useEffect(() => {
     if (domains.length === 0) {
       fetchDomains()
     }
-  }, [domains.length, fetchDomains])
+    if (products.length === 0) {
+      fetchProducts()
+    }
+  }, [domains.length, fetchDomains, products.length, fetchProducts])
 
   useEffect(() => {
     if (contractId) {
@@ -130,7 +136,7 @@ export function ContractDetailPage() {
         <div className="lg:col-span-7">
           <ContractInfoPanel contract={selectedContract} />
           
-          {/* Quality Rules moved below contract info */}
+          {/* Quality Rules */}
           <div className="mt-8">
             <QualityRulesModule qualityRules={selectedContract.qualityRules} />
           </div>
