@@ -234,21 +234,17 @@ export function SearchResults() {
       </div>
 
       {/* Results content */}
-      <div className="flex-1 overflow-y-auto min-h-0">
-        <Tabs value={activeTab}>
-          <TabsContent value="all" className="p-4 mt-0">
-            <SearchResultsList results={paginatedResults} onAction={handleResultAction} />
-          </TabsContent>
-          <TabsContent value="domain" className="p-4 mt-0">
-            <SearchResultsList results={paginatedResults} onAction={handleResultAction} />
-          </TabsContent>
-          <TabsContent value="contract" className="p-4 mt-0">
-            <SearchResultsList results={paginatedResults} onAction={handleResultAction} />
-          </TabsContent>
-          <TabsContent value="product" className="p-4 mt-0">
-            <SearchResultsList results={paginatedResults} onAction={handleResultAction} />
-          </TabsContent>
-        </Tabs>
+      <div 
+        className="flex-1 p-4" 
+        style={{ 
+          height: 'calc(80vh - 200px)',
+          overflowY: 'scroll',
+          WebkitOverflowScrolling: 'touch',
+          scrollBehavior: 'smooth',
+          position: 'relative'
+        }}
+      >
+        <SearchResultsList results={paginatedResults} onAction={handleResultAction} />
       </div>
 
       {/* Pagination footer */}

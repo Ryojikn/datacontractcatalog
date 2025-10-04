@@ -158,7 +158,16 @@ export function AIChat() {
 
   return (
     <div className="h-full flex flex-col">
-      <div className="flex-1 overflow-y-auto p-4 space-y-6 min-h-0">
+      <div 
+        className="flex-1 p-4 space-y-6" 
+        style={{ 
+          height: 'calc(80vh - 200px)',
+          overflowY: 'scroll',
+          WebkitOverflowScrolling: 'touch',
+          scrollBehavior: 'smooth',
+          position: 'relative'
+        }}
+      >
         {currentConversation?.messages.map(message => (
           <div key={message.id} className="flex items-start space-x-3">
             <div className="flex-shrink-0">

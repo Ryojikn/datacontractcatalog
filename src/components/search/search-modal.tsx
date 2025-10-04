@@ -31,8 +31,8 @@ export function SearchModal() {
 
   return (
     <Dialog open={isSearchOpen} onOpenChange={(open) => !open && closeSearch()}>
-      <DialogContent className="max-w-4xl w-[90vw] h-[80vh] p-0 gap-0 overflow-hidden">
-        <div className="flex flex-col h-full">
+      <DialogContent className="max-w-4xl w-[90vw] h-[80vh] p-0 gap-0" style={{ display: 'flex', flexDirection: 'column' }}>
+        <div className="flex flex-col h-full" style={{ height: '100%', maxHeight: '80vh' }}>
           {/* Header with search bar and mode toggle */}
           <div className="flex-shrink-0 border-b border-border p-4 space-y-4">
             <div className="flex items-center justify-between">

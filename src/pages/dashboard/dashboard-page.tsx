@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDashboardData } from './hooks/use-dashboard-data';
 import { ContractsMetrics, ProductsMetrics, UsersMetrics, DashboardHeader } from './components';
-import { ValidationSummary } from '@/components/dashboard/validation-summary';
 import { useContractStore } from '@/stores/contract';
 import { useProductStore } from '@/stores/product';
 
@@ -49,15 +48,6 @@ const DashboardPage: React.FC = () => {
 
         {/* Metrics Grid - Responsive Layout */}
         <div className="space-y-6 lg:space-y-8">
-          {/* Validation Summary Section */}
-          <section className="space-y-4">
-            <h2 className="text-lg sm:text-xl font-semibold">Contract Validation</h2>
-            <ValidationSummary
-              contracts={contracts}
-              products={products}
-            />
-          </section>
-
           {/* Data Contracts Section */}
           <section className="space-y-4">
             <h2 className="text-lg sm:text-xl font-semibold">Data Contracts</h2>
