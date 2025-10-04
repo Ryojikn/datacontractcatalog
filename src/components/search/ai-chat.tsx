@@ -1,10 +1,13 @@
-import { useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useSearchStore } from '@/stores/search';
 import { Loader2, Bot, User, ExternalLink, ShoppingCart, Eye, Lightbulb, ArrowRight, GitBranch, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useNavigate } from 'react-router-dom';
 import { useCartStore } from '@/stores/cart';
+import { useToast } from '@/hooks/use-toast';
+import { mockDataService } from '@/services/mockDataService';
 import type { SearchResult } from '@/types';
 
 export function AIChat() {
@@ -20,6 +23,32 @@ export function AIChat() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const { addToCart } = useCartStore();
+  const { toast } = useToast();
+  const [schemaCache, setSchemaCache] = useState<Record<string, string | null>>({});
+
+  const getContractSchema = async (contractId: string) => {
+    if (schemaCache[contractId] !== undefined) {
+      return schemaCache[contractId];
+    }
+
+    try {
+      const contract = await mockDataService.getContractById(contractId);
+      if (!contract?.schema?.columns) {
+        setSchemaCache(prev => ({ ...prev, [contractId]: null }));
+        return null;
+      }
+      
+      const schema = contract.schema.columns.slice(0, 5).map((col: any) => 
+        `${col.name}: ${col.type}${col.nullable ? ' (nullable)' : ''}`
+      ).join('\n');
+      
+      setSchemaCache(prev => ({ ...prev, [contractId]: schema }));
+      return schema;
+    } catch {
+      setSchemaCache(prev => ({ ...prev, [contractId]: null }));
+      return null;
+    }
+  };
 
   // Auto scroll to bottom when new messages arrive
   useEffect(() => {
@@ -47,19 +76,41 @@ export function AIChat() {
       
       case 'cart':
         if (card.type === 'product') {
-          const mockProduct = {
-            id: card.id,
-            name: card.title,
-            dataContractId: card.id,
-            pipelineType: 'processing' as const,
-            configJson: { type: 'processing' as const },
-            github: { repoName: '', repoUrl: '', pagesUrl: '' },
-            technology: card.metadata.technology,
-            description: card.description
-          };
-          addToCart(mockProduct);
-          console.log(`${card.title} has been added to your cart.`);
+          // Get the actual product data from the service
+          mockDataService.getProductById(card.id)
+            .then(product => {
+              if (product) {
+                addToCart(product);
+                // Show toast notification
+                toast({
+                  title: "✅ Success",
+                  description: `${product.name} has been added to the cart.`,
+                  duration: 3000,
+                });
+              } else {
+                toast({
+                  title: "❌ Error",
+                  description: `Product with id ${card.id} not found`,
+                  variant: "destructive",
+                  duration: 3000,
+                });
+              }
+            })
+            .catch(error => {
+              toast({
+                title: "❌ Error",
+                description: "Failed to add product to cart. Please try again.",
+                variant: "destructive",
+                duration: 3000,
+              });
+              console.error('Error adding product to cart:', error);
+            });
         }
+        break;
+      
+      case 'preview':
+        // TODO: Implement preview modal
+        console.log("Preview functionality coming soon.");
         break;
     }
   };
@@ -179,20 +230,37 @@ export function AIChat() {
                         
                         {/* Actions */}
                         <div className="flex items-center space-x-2">
-                          {card.actions.map(action => (
-                            <Button
-                              key={action.id}
-                              variant={action.primary ? "default" : "outline"}
-                              size="sm"
-                              onClick={() => handleCardAction(card, action.type)}
-                              className="text-xs h-6"
-                            >
-                              {action.type === 'navigate' && <Eye className="h-3 w-3 mr-1" />}
-                              {action.type === 'cart' && <ShoppingCart className="h-3 w-3 mr-1" />}
-                              {action.type === 'preview' && <ExternalLink className="h-3 w-3 mr-1" />}
-                              {action.label}
-                            </Button>
-                          ))}
+                          <TooltipProvider>
+                            {card.actions.map(action => {
+                              if (action.type === 'preview' && card.type === 'contract') {
+                                return (
+                                  <SchemaPreviewButton
+                                    key={action.id}
+                                    action={action}
+                                    contractId={card.id}
+                                    onAction={handleCardAction}
+                                    result={card}
+                                    getContractSchema={getContractSchema}
+                                  />
+                                );
+                              }
+                              
+                              return (
+                                <Button
+                                  key={action.id}
+                                  variant={action.primary ? "default" : "outline"}
+                                  size="sm"
+                                  onClick={() => handleCardAction(card, action.type)}
+                                  className="text-xs h-6"
+                                >
+                                  {action.type === 'navigate' && <ExternalLink className="h-3 w-3 mr-1" />}
+                                  {action.type === 'cart' && <ShoppingCart className="h-3 w-3 mr-1" />}
+                                  {action.type === 'preview' && <Eye className="h-3 w-3 mr-1" />}
+                                  {action.label}
+                                </Button>
+                              );
+                            })}
+                          </TooltipProvider>
                         </div>
                       </div>
                     ))}
@@ -289,5 +357,56 @@ export function AIChat() {
         <div ref={messagesEndRef} />
       </div>
     </div>
+  );
+}
+
+interface SchemaPreviewButtonProps {
+  action: any;
+  contractId: string;
+  onAction: (result: SearchResult, actionType: string) => void;
+  result: SearchResult;
+  getContractSchema: (contractId: string) => Promise<string | null>;
+}
+
+function SchemaPreviewButton({ action, contractId, onAction, result, getContractSchema }: SchemaPreviewButtonProps) {
+  const [schema, setSchema] = useState<string | null | undefined>(undefined);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleMouseEnter = async () => {
+    if (schema === undefined && !isLoading) {
+      setIsLoading(true);
+      const schemaData = await getContractSchema(contractId);
+      setSchema(schemaData);
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Button
+          variant={action.primary ? "default" : "outline"}
+          size="sm"
+          onClick={() => onAction(result, action.type)}
+          onMouseEnter={handleMouseEnter}
+          className="text-xs h-6"
+        >
+          <Eye className="h-3 w-3 mr-1" />
+          {action.label}
+        </Button>
+      </TooltipTrigger>
+      <TooltipContent side="top" className="max-w-xs">
+        <div className="text-xs">
+          <p className="font-medium mb-1">Schema Preview:</p>
+          {isLoading ? (
+            <p className="text-muted-foreground">Loading schema...</p>
+          ) : schema ? (
+            <pre className="whitespace-pre-wrap text-xs">{schema}</pre>
+          ) : (
+            <p className="text-muted-foreground">Schema not available</p>
+          )}
+        </div>
+      </TooltipContent>
+    </Tooltip>
   );
 }

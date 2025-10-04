@@ -147,11 +147,21 @@ class SearchService {
   }
 
   /**
+   * Normalize text by removing accents and converting to lowercase
+   */
+  private normalizeText(text: string): string {
+    return text
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '') // Remove diacritics/accents
+      .trim();
+  }
+
+  /**
    * Extract keywords from text for search indexing
    */
   private extractKeywords(text: string): string[] {
-    return text
-      .toLowerCase()
+    return this.normalizeText(text)
       .replace(/[^\w\s]/g, ' ')
       .split(/\s+/)
       .filter(word => word.length > 2)
@@ -266,14 +276,15 @@ class SearchService {
    * Extract semantic terms for enhanced search
    */
   private extractSemanticTerms(query: string): string[] {
-    const terms = query.toLowerCase().split(/\s+/);
+    const normalizedQuery = this.normalizeText(query);
+    const terms = normalizedQuery.split(/\s+/);
     const semanticTerms: string[] = [];
     
     // Add synonyms and related terms
     for (const term of terms) {
       semanticTerms.push(term);
       
-      // Add domain-specific synonyms
+      // Add domain-specific synonyms (normalized)
       if (term.includes('card') || term.includes('cartao')) {
         semanticTerms.push('credit', 'payment', 'transaction', 'credito', 'pagamento');
       }
@@ -292,17 +303,21 @@ class SearchService {
    * Calculate semantic relevance score
    */
   private calculateSemanticRelevance(item: any, query: string, semanticTerms: string[]): number {
-    const searchableText = (
+    // Normalize both the searchable text and query for accent-insensitive search
+    const searchableText = this.normalizeText(
       item.name + ' ' + 
       item.description + ' ' + 
       (item.keywords || []).join(' ')
-    ).toLowerCase();
+    );
+
+    const normalizedQuery = this.normalizeText(query);
+    const queryTerms = normalizedQuery.split(/\s+/);
+    const normalizedSemanticTerms = semanticTerms.map(term => this.normalizeText(term));
 
     let score = 0;
-    const queryTerms = query.split(/\s+/);
 
     // Exact phrase match (highest weight)
-    if (searchableText.includes(query)) {
+    if (searchableText.includes(normalizedQuery)) {
       score += 1.0;
     }
 
@@ -314,14 +329,14 @@ class SearchService {
     }
 
     // Semantic term matches
-    for (const term of semanticTerms) {
+    for (const term of normalizedSemanticTerms) {
       if (searchableText.includes(term)) {
         score += 0.3;
       }
     }
 
     // Normalize score
-    return Math.min(score / (queryTerms.length + semanticTerms.length * 0.3), 1.0);
+    return Math.min(score / (queryTerms.length + normalizedSemanticTerms.length * 0.3), 1.0);
   }
 
   /**
@@ -342,25 +357,40 @@ class SearchService {
   private getSemanticHighlights(item: any, query: string, _semanticTerms: string[]): any {
     const highlights: any = {};
     
-    // Highlight name
-    if (item.name && item.name.toLowerCase().includes(query.toLowerCase())) {
-      highlights.name = this.highlightText(item.name, query);
+    // Highlight name (accent-insensitive matching)
+    if (item.name && this.normalizeText(item.name).includes(this.normalizeText(query))) {
+      highlights.name = this.highlightTextAccentInsensitive(item.name, query);
     }
     
-    // Highlight description
-    if (item.description && item.description.toLowerCase().includes(query.toLowerCase())) {
-      highlights.description = this.highlightText(item.description, query);
+    // Highlight description (accent-insensitive matching)
+    if (item.description && this.normalizeText(item.description).includes(this.normalizeText(query))) {
+      highlights.description = this.highlightTextAccentInsensitive(item.description, query);
     }
     
     return highlights;
   }
 
   /**
-   * Highlight matching text
+   * Highlight matching text with accent-insensitive search
    */
-  private highlightText(text: string, query: string): string {
-    const regex = new RegExp(`(${query})`, 'gi');
-    return text.replace(regex, '<mark>$1</mark>');
+  private highlightTextAccentInsensitive(text: string, query: string): string {
+    const normalizedQuery = this.normalizeText(query);
+    const queryTerms = normalizedQuery.split(/\s+/).filter(term => term.length > 0);
+    
+    let highlightedText = text;
+    
+    for (const term of queryTerms) {
+      // Find all words in the text that match when normalized
+      const words = text.split(/(\s+)/);
+      for (let i = 0; i < words.length; i++) {
+        if (this.normalizeText(words[i]).includes(term)) {
+          words[i] = `<mark>${words[i]}</mark>`;
+        }
+      }
+      highlightedText = words.join('');
+    }
+    
+    return highlightedText;
   }
 
   /**
@@ -442,11 +472,11 @@ class SearchService {
     try {
       const searchIndex = await this.getSearchIndex();
       const suggestions: SearchSuggestion[] = [];
-      const query = partialQuery.toLowerCase();
+      const normalizedQuery = this.normalizeText(partialQuery);
       
       // Suggest domains
       searchIndex.domains.forEach((domain, index) => {
-        if (domain.name.toLowerCase().includes(query)) {
+        if (this.normalizeText(domain.name).includes(normalizedQuery)) {
           suggestions.push({
             id: `domain-${index}`,
             text: domain.name,
@@ -458,7 +488,7 @@ class SearchService {
       
       // Suggest contracts
       searchIndex.contracts.forEach((contract, index) => {
-        if (contract.name.toLowerCase().includes(query)) {
+        if (this.normalizeText(contract.name).includes(normalizedQuery)) {
           suggestions.push({
             id: `contract-${index}`,
             text: contract.name,
@@ -470,7 +500,7 @@ class SearchService {
       
       // Suggest products
       searchIndex.products.forEach((product, index) => {
-        if (product.name.toLowerCase().includes(query)) {
+        if (this.normalizeText(product.name).includes(normalizedQuery)) {
           suggestions.push({
             id: `product-${index}`,
             text: product.name,

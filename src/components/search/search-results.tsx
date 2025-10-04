@@ -7,7 +7,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useNavigate } from 'react-router-dom';
 import { useCartStore } from '@/stores/cart';
-import { useNotificationStore } from '@/stores/notification';
+import { useToast } from '@/hooks/use-toast';
 import { mockDataService } from '@/services/mockDataService';
 import type { SearchResult } from '@/types';
 
@@ -27,7 +27,7 @@ export function SearchResults() {
   
   const navigate = useNavigate();
   const { addToCart } = useCartStore();
-  const { addSystemNotification } = useNotificationStore();
+  const { toast } = useToast();
 
   // Filter results by type
   const filteredResults = results.filter(result => {
@@ -75,22 +75,28 @@ export function SearchResults() {
             .then(product => {
               if (product) {
                 addToCart(product);
-                addSystemNotification(
-                  'Product Added to Cart',
-                  `${product.name} has been added to your cart.`
-                );
+                // Show toast notification
+                toast({
+                  title: "✅ Success",
+                  description: `${product.name} has been added to the cart.`,
+                  duration: 3000,
+                });
               } else {
-                addSystemNotification(
-                  'Error',
-                  `Product with id ${result.id} not found`
-                );
+                toast({
+                  title: "❌ Error",
+                  description: `Product with id ${result.id} not found`,
+                  variant: "destructive",
+                  duration: 3000,
+                });
               }
             })
             .catch(error => {
-              addSystemNotification(
-                'Error',
-                'Failed to add product to cart. Please try again.'
-              );
+              toast({
+                title: "❌ Error",
+                description: "Failed to add product to cart. Please try again.",
+                variant: "destructive",
+                duration: 3000,
+              });
               console.error('Error adding product to cart:', error);
             });
         }
