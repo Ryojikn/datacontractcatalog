@@ -4,8 +4,11 @@ import { Loader2, ExternalLink, ShoppingCart, Eye, GitBranch, Star } from 'lucid
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useNavigate } from 'react-router-dom';
 import { useCartStore } from '@/stores/cart';
+import { useNotificationStore } from '@/stores/notification';
+import { mockDataService } from '@/services/mockDataService';
 import type { SearchResult } from '@/types';
 
 export function SearchResults() {
@@ -24,6 +27,7 @@ export function SearchResults() {
   
   const navigate = useNavigate();
   const { addToCart } = useCartStore();
+  const { addSystemNotification } = useNotificationStore();
 
   // Filter results by type
   const filteredResults = results.filter(result => {
@@ -66,24 +70,29 @@ export function SearchResults() {
       
       case 'cart':
         if (result.type === 'product') {
-          // Create a mock DataProduct from search result
-          const mockProduct = {
-            id: result.id,
-            name: result.title,
-            dataContractId: result.id, // Use result.id as fallback
-            pipelineType: 'processing' as const,
-            configJson: { type: 'processing' as const },
-            github: {
-              repoName: '',
-              repoUrl: '',
-              pagesUrl: ''
-            },
-            technology: result.metadata.technology,
-            description: result.description
-          };
-          addToCart(mockProduct);
-          // Toast temporarily disabled to prevent infinite loop
-          console.log(`${result.title} has been added to your cart.`);
+          // Get the actual product data from the service
+          mockDataService.getProductById(result.id)
+            .then(product => {
+              if (product) {
+                addToCart(product);
+                addSystemNotification(
+                  'Product Added to Cart',
+                  `${product.name} has been added to your cart.`
+                );
+              } else {
+                addSystemNotification(
+                  'Error',
+                  `Product with id ${result.id} not found`
+                );
+              }
+            })
+            .catch(error => {
+              addSystemNotification(
+                'Error',
+                'Failed to add product to cart. Please try again.'
+              );
+              console.error('Error adding product to cart:', error);
+            });
         }
         break;
       
@@ -303,6 +312,32 @@ interface SearchResultsListProps {
 }
 
 function SearchResultsList({ results, onAction }: SearchResultsListProps) {
+  const [schemaCache, setSchemaCache] = useState<Record<string, string | null>>({});
+
+  const getContractSchema = async (contractId: string) => {
+    if (schemaCache[contractId] !== undefined) {
+      return schemaCache[contractId];
+    }
+
+    try {
+      const contract = await mockDataService.getContractById(contractId);
+      if (!contract?.schema?.columns) {
+        setSchemaCache(prev => ({ ...prev, [contractId]: null }));
+        return null;
+      }
+      
+      const schema = contract.schema.columns.slice(0, 5).map((col: any) => 
+        `${col.name}: ${col.type}${col.nullable ? ' (nullable)' : ''}`
+      ).join('\n');
+      
+      setSchemaCache(prev => ({ ...prev, [contractId]: schema }));
+      return schema;
+    } catch {
+      setSchemaCache(prev => ({ ...prev, [contractId]: null }));
+      return null;
+    }
+  };
+
   const getTypeIcon = (type: SearchResult['type']) => {
     switch (type) {
       case 'domain':
@@ -402,25 +437,93 @@ function SearchResultsList({ results, onAction }: SearchResultsListProps) {
 
               {/* Actions */}
               <div className="flex items-center space-x-2">
-                {result.actions.map(action => (
-                  <Button
-                    key={action.id}
-                    variant={action.primary ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => onAction(result, action.type)}
-                    className="text-xs h-7"
-                  >
-                    {action.type === 'navigate' && <Eye className="h-3 w-3 mr-1" />}
-                    {action.type === 'cart' && <ShoppingCart className="h-3 w-3 mr-1" />}
-                    {action.type === 'preview' && <ExternalLink className="h-3 w-3 mr-1" />}
-                    {action.label}
-                  </Button>
-                ))}
+                <TooltipProvider>
+                  {result.actions.map(action => {
+                    if (action.type === 'preview' && result.type === 'contract') {
+                      return (
+                        <SchemaPreviewButton
+                          key={action.id}
+                          action={action}
+                          contractId={result.id}
+                          onAction={onAction}
+                          result={result}
+                          getContractSchema={getContractSchema}
+                        />
+                      );
+                    }
+                    
+                    return (
+                      <Button
+                        key={action.id}
+                        variant={action.primary ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => onAction(result, action.type)}
+                        className="text-xs h-7"
+                      >
+                        {action.type === 'navigate' && <ExternalLink className="h-3 w-3 mr-1" />}
+                        {action.type === 'cart' && <ShoppingCart className="h-3 w-3 mr-1" />}
+                        {action.type === 'preview' && <Eye className="h-3 w-3 mr-1" />}
+                        {action.label}
+                      </Button>
+                    );
+                  })}
+                </TooltipProvider>
               </div>
             </div>
           </div>
         </div>
       ))}
     </div>
+  );
+}
+
+interface SchemaPreviewButtonProps {
+  action: any;
+  contractId: string;
+  onAction: (result: SearchResult, actionType: string) => void;
+  result: SearchResult;
+  getContractSchema: (contractId: string) => Promise<string | null>;
+}
+
+function SchemaPreviewButton({ action, contractId, onAction, result, getContractSchema }: SchemaPreviewButtonProps) {
+  const [schema, setSchema] = useState<string | null | undefined>(undefined);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleMouseEnter = async () => {
+    if (schema === undefined && !isLoading) {
+      setIsLoading(true);
+      const schemaData = await getContractSchema(contractId);
+      setSchema(schemaData);
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Button
+          variant={action.primary ? "default" : "outline"}
+          size="sm"
+          onClick={() => onAction(result, action.type)}
+          onMouseEnter={handleMouseEnter}
+          className="text-xs h-7"
+        >
+          <Eye className="h-3 w-3 mr-1" />
+          {action.label}
+        </Button>
+      </TooltipTrigger>
+      <TooltipContent side="top" className="max-w-xs">
+        <div className="text-xs">
+          <p className="font-medium mb-1">Schema Preview:</p>
+          {isLoading ? (
+            <p className="text-muted-foreground">Loading schema...</p>
+          ) : schema ? (
+            <pre className="whitespace-pre-wrap text-xs">{schema}</pre>
+          ) : (
+            <p className="text-muted-foreground">Schema not available</p>
+          )}
+        </div>
+      </TooltipContent>
+    </Tooltip>
   );
 }

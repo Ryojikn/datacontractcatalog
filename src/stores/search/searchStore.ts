@@ -429,8 +429,8 @@ export const useSearchStore = create<SearchState>()(
       },
       
       // Suggestions
-      updateSuggestions: (query: string) => {
-        const suggestions = searchService.getSuggestions(query);
+      updateSuggestions: async (query: string) => {
+        const suggestions = await searchService.getSuggestions(query);
         set({ suggestions });
       },
       
