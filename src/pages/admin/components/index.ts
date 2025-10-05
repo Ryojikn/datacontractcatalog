@@ -1,0 +1,9 @@
+export { PendingApprovalsTab } from './pending-approvals-tab';
+export { CurrentAccessTab } from './current-access-tab';
+export { AccessHistoryTab } from './access-history-tab';
+export { PendingApprovalsList } from './pending-approvals-list';
+export { CurrentAccessList } from './current-access-list';
+export { ApprovalActionDialog } from './approval-action-dialog';
+export { DeclineCommentDialog } from './decline-comment-dialog';
+export { AccessRenewalDialog } from './access-renewal-dialog';
+export { RevocationNoticeDialog } from './revocation-notice-dialog';

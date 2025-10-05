@@ -5,6 +5,12 @@ export const EXECUTION_STATUS_VALUES = ['success', 'failure', 'running'] as cons
 export const QUALITY_SEVERITY_VALUES = ['low', 'medium', 'high', 'critical'] as const;
 export const ACCESS_REQUEST_STATUS_VALUES = ['pending', 'approved_by_access_group', 'approved_by_product_owner', 'approved', 'rejected'] as const;
 
+// Access management constants
+export const ACCESS_PRIORITY_VALUES = ['low', 'medium', 'high'] as const;
+export const ACCESS_LEVEL_VALUES = ['read', 'write', 'admin'] as const;
+export const CURRENT_ACCESS_STATUS_VALUES = ['active', 'expiring_soon', 'scheduled_for_revocation'] as const;
+export const COMMENT_TEMPLATE_CATEGORY_VALUES = ['security', 'policy', 'justification', 'technical'] as const;
+
 // Pipeline type constants
 export const PIPELINE_TYPES = ['ingestion', 'processing', 'model_inference', 'model_training', 'model_serving'] as const;
 
@@ -15,6 +21,12 @@ export type ExecutionStatus = typeof EXECUTION_STATUS_VALUES[number];
 export type QualitySeverity = typeof QUALITY_SEVERITY_VALUES[number];
 export type AccessRequestStatus = typeof ACCESS_REQUEST_STATUS_VALUES[number];
 export type PipelineType = typeof PIPELINE_TYPES[number];
+
+// Access management types
+export type AccessPriority = typeof ACCESS_PRIORITY_VALUES[number];
+export type AccessLevel = typeof ACCESS_LEVEL_VALUES[number];
+export type CurrentAccessStatus = typeof CURRENT_ACCESS_STATUS_VALUES[number];
+export type CommentTemplateCategory = typeof COMMENT_TEMPLATE_CATEGORY_VALUES[number];
 
 // Core domain interfaces
 export interface Domain {
@@ -170,6 +182,67 @@ export interface AccessRequestNotification {
   createdAt: string;
 }
 
+// Administrative access management interfaces
+export interface PendingAccessRequest extends AccessRequest {
+  priority: AccessPriority;
+  daysWaiting: number;
+  adminNotes?: string;
+  escalated?: boolean;
+}
+
+export interface CurrentAccess {
+  id: string;
+  userId: string;
+  userName: string;
+  userEmail: string;
+  productId: string;
+  productName: string;
+  grantedAt: string;
+  expiresAt: string;
+  grantedBy: string;
+  accessLevel: AccessLevel;
+  status: CurrentAccessStatus;
+  revocationScheduledAt?: string;
+  revocationNotificationSent?: boolean;
+}
+
+export interface CommentTemplate {
+  id: string;
+  category: CommentTemplateCategory;
+  title: string;
+  content: string;
+  variables?: string[]; // For dynamic content like {productName}
+}
+
+export interface AccessRevocationNotice {
+  id: string;
+  accessId: string;
+  userId: string;
+  scheduledRevocationDate: string;
+  notificationDate: string;
+  notificationSent: boolean;
+  remindersSent: number;
+  createdAt: string;
+}
+
+export interface AccessHistoryEntry {
+  id: string;
+  productId: string;
+  productName: string;
+  userId: string;
+  userName: string;
+  userEmail: string;
+  action: 'granted' | 'renewed' | 'revoked' | 'expired';
+  grantedAt: string;
+  expiresAt?: string;
+  revokedAt?: string;
+  grantedBy: string;
+  revokedBy?: string;
+  accessLevel: AccessLevel;
+  reason?: string;
+  duration?: number; // in days
+}
+
 // Cart types
 export interface CartItem {
   id: string;
@@ -192,13 +265,92 @@ export interface BulkAccessRequest {
 // Notification types
 export interface Notification {
   id: string;
-  type: 'access_approved' | 'access_rejected' | 'access_pending' | 'system';
+  type: 'access_approved' | 'access_rejected' | 'access_pending' | 'system' | AdminNotificationType;
   title: string;
   message: string;
   productId?: string;
   productName?: string;
   read: boolean;
   createdAt: string;
+}
+
+// Admin notification types
+export type AdminNotificationType = 
+  | 'access_expiring_soon'
+  | 'access_revocation_scheduled'
+  | 'access_revocation_imminent'
+  | 'access_renewed'
+  | 'access_force_revoked';
+
+// Audit logging types
+export const AUDIT_ACTION_VALUES = ['approve', 'decline', 'renew', 'revoke', 'force_revoke', 'schedule_revocation', 'bulk_renew'] as const;
+export type AuditActionType = typeof AUDIT_ACTION_VALUES[number];
+
+export interface AuditLogEntry {
+  id: string;
+  timestamp: string;
+  administratorId: string;
+  administratorName: string;
+  administratorEmail: string;
+  action: AuditActionType;
+  targetUserId: string;
+  targetUserName: string;
+  targetUserEmail: string;
+  productId: string;
+  productName: string;
+  accessId?: string;
+  requestId?: string;
+  details: AuditActionDetails;
+  ipAddress?: string;
+  userAgent?: string;
+}
+
+export interface AuditActionDetails {
+  reason?: string;
+  comment?: string;
+  previousExpirationDate?: string;
+  newExpirationDate?: string;
+  revocationScheduledDate?: string;
+  bulkOperationCount?: number;
+  templateUsed?: string;
+  additionalContext?: Record<string, unknown>;
+}
+
+export interface AuditReport {
+  id: string;
+  title: string;
+  generatedAt: string;
+  generatedBy: string;
+  dateRange: {
+    from: string;
+    to: string;
+  };
+  filters: AuditReportFilters;
+  entries: AuditLogEntry[];
+  summary: AuditReportSummary;
+  exportFormat: 'json' | 'csv' | 'pdf';
+}
+
+export interface AuditReportFilters {
+  administratorIds?: string[];
+  targetUserIds?: string[];
+  productIds?: string[];
+  actions?: AuditActionType[];
+  dateRange?: {
+    from: string;
+    to: string;
+  };
+}
+
+export interface AuditReportSummary {
+  totalEntries: number;
+  actionCounts: Record<AuditActionType, number>;
+  administratorCounts: Record<string, number>;
+  productCounts: Record<string, number>;
+  dateRange: {
+    from: string;
+    to: string;
+  };
 }
 
 // Pipeline configuration interfaces

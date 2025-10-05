@@ -2,11 +2,12 @@ import { ThemeToggle } from "@/components/theme-toggle"
 import { CartSidebar } from "@/components/cart"
 import { NotificationSidebar } from "@/components/notification"
 import { SearchModal } from "@/components/search"
+import { ConditionalRender } from "@/components/auth"
 import { useCartStore } from "@/stores/cart"
 import { useNotificationStore } from "@/stores/notification"
 import { useSearchStore } from "@/stores/search"
 import { Button, Badge } from "@/components/ui"
-import { ShoppingCart, Bell, Search, BarChart3 } from "lucide-react"
+import { ShoppingCart, Bell, Search, BarChart3, Settings } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 
 interface AppLayoutProps {
@@ -32,12 +33,34 @@ export function AppLayout({ children }: AppLayoutProps) {
     navigate('/dashboard');
   }
 
+  const handleAdminClick = () => {
+    // Close any open modals before navigating
+    useSearchStore.getState().closeSearch();
+    useCartStore.getState().closeCart();
+    useNotificationStore.getState().closeNotifications();
+    navigate('/admin');
+  }
+
+  const handleHomeClick = () => {
+    // Close any open modals before navigating
+    useSearchStore.getState().closeSearch();
+    useCartStore.getState().closeCart();
+    useNotificationStore.getState().closeNotifications();
+    navigate('/');
+  }
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container mx-auto flex h-14 max-w-screen-2xl items-center justify-between px-4 sm:px-6">
           <div className="flex items-center space-x-2">
-            <h1 className="text-lg sm:text-xl font-bold truncate">DataContract Catalog</h1>
+            <h1 
+              className="text-lg sm:text-xl font-bold truncate cursor-pointer hover:text-primary transition-colors"
+              onClick={handleHomeClick}
+              title="Go to homepage"
+            >
+              DataContract Catalog
+            </h1>
           </div>
           <div className="flex items-center space-x-1 sm:space-x-2">
             {/* Search Button */}
@@ -62,6 +85,20 @@ export function AppLayout({ children }: AppLayoutProps) {
             >
               <BarChart3 className="h-4 w-4" />
             </Button>
+            
+            {/* Admin Button - Only visible to admin users */}
+            <ConditionalRender requiredRole="admin">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleAdminClick}
+                className="p-2"
+                aria-label="Administration"
+                title="Administration"
+              >
+                <Settings className="h-4 w-4" />
+              </Button>
+            </ConditionalRender>
             
             {/* Cart Button */}
             <Button

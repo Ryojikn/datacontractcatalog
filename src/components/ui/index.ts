@@ -62,3 +62,4 @@ export {
 export { Toaster } from './toaster'
 export { Popover, PopoverTrigger, PopoverContent } from './popover'
 export { Separator } from './separator'
+export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent } from './card'
