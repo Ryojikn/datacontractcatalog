@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useAdminStore } from '@/stores/admin';
 import { usePermissions } from '@/hooks/use-permissions';
-import { Breadcrumb } from '@/components/layout';
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { RefreshCw, Clock, Activity, Shield, History } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { PendingApprovalsTab, CurrentAccessTab, AccessHistoryTab } from './components';
-import type { BreadcrumbItem } from '@/types';
+
 
 const AdminPage: React.FC = () => {
   const { lastRefresh, fetchPendingRequests, fetchCurrentAccess } = useAdminStore();
@@ -35,12 +35,7 @@ const AdminPage: React.FC = () => {
     }
   };
 
-  // Breadcrumb items for admin page
-  const breadcrumbItems: BreadcrumbItem[] = [
-    { label: 'Home', path: '/' },
-    { label: 'Dashboard', path: '/dashboard' },
-    { label: 'Administration', active: true }
-  ];
+
 
   // Format the last updated timestamp for display
   const formatLastUpdated = (timestamp?: string): string => {
@@ -189,11 +184,6 @@ const AdminPage: React.FC = () => {
 
       {/* Admin Content */}
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-        {/* Breadcrumb Navigation */}
-        <Breadcrumb items={breadcrumbItems} />
-
-
-
         {/* Tabbed Interface */}
         <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
           <TabsList className="grid w-full grid-cols-3 mb-6">
