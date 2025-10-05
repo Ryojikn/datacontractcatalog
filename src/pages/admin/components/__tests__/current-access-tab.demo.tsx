@@ -174,10 +174,10 @@ export function CurrentAccessTabDemo() {
       <div className="mt-8 space-y-4">
         <h2 className="text-xl font-semibold">New Features Added:</h2>
         <ul className="list-disc list-inside space-y-2 text-sm text-muted-foreground">
-          <li><strong>Product Filtering:</strong> Select a specific data product to view only its current access</li>
-          <li><strong>All Products View:</strong> Option to view all current access across all products</li>
+          <li><strong>Product Selection Required:</strong> Must select a specific data product to view current access</li>
           <li><strong>Product Information:</strong> Display selected product details with technology badges</li>
           <li><strong>Access Count:</strong> Shows number of current access entries for selected product</li>
+          <li><strong>Empty State:</strong> Clear guidance when no product is selected</li>
           <li><strong>Consistent UI:</strong> Matches the design pattern from Access History tab</li>
           <li><strong>Responsive Design:</strong> Works well on mobile and desktop devices</li>
         </ul>
@@ -191,9 +191,9 @@ export function CurrentAccessTabDemo() {
         
         <h2 className="text-xl font-semibold mt-6">How to Use:</h2>
         <ol className="list-decimal list-inside space-y-2 text-sm text-muted-foreground">
-          <li>By default, "All products (no filter)" is selected to show all current access</li>
-          <li>Select a specific product to filter and see only access for that product</li>
-          <li>View the product information card when a product is selected</li>
+          <li>Start by selecting a specific data product from the dropdown</li>
+          <li>View the product information card and access count</li>
+          <li>See the current access permissions list for that product</li>
           <li>Use existing functionality like renewal, revocation, and bulk operations</li>
           <li>Apply additional filters and sorting as available in the current access list</li>
         </ol>
@@ -201,10 +201,10 @@ export function CurrentAccessTabDemo() {
         <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
           <h3 className="font-semibold text-blue-900 mb-2">Integration Benefits:</h3>
           <p className="text-sm text-blue-800">
-            This enhancement provides administrators with better visibility and control over access management 
-            by allowing them to focus on specific data products while maintaining the ability to see the 
-            complete picture across all products. The filtering capability is especially useful for 
-            organizations with many data products and complex access patterns.
+            This enhancement provides administrators with focused access management by requiring them to 
+            select a specific data product before viewing current access permissions. This approach 
+            reduces cognitive load, improves performance, and ensures administrators are always working 
+            within the context of a specific product, leading to more accurate and intentional access management decisions.
           </p>
         </div>
       </div>

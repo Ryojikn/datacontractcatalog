@@ -17,7 +17,6 @@ const CurrentAccessTab: React.FC<CurrentAccessTabProps> = ({ className }) => {
     currentAccess, 
     loading, 
     error, 
-    fetchCurrentAccess,
     fetchCurrentAccessByProduct,
     renewAccess,
     bulkRenewAccess,
@@ -35,14 +34,13 @@ const CurrentAccessTab: React.FC<CurrentAccessTabProps> = ({ className }) => {
     }
   }, [products.length, fetchProducts]);
 
-  // Fetch current access data when component mounts or when product selection changes
+  // Fetch current access data when a specific product is selected
   useEffect(() => {
     if (selectedProductId && selectedProductId !== 'all') {
       fetchCurrentAccessByProduct(selectedProductId);
-    } else {
-      fetchCurrentAccess();
     }
-  }, [selectedProductId, fetchCurrentAccess, fetchCurrentAccessByProduct]);
+    // Don't fetch anything when "all" is selected since we won't show the list
+  }, [selectedProductId, fetchCurrentAccessByProduct]);
 
   // Handle action callbacks
   const handleRenewAccess = async (accessId: string) => {
@@ -79,7 +77,10 @@ const CurrentAccessTab: React.FC<CurrentAccessTabProps> = ({ className }) => {
 
   const selectedProduct = products.find(p => p.id === selectedProductId);
   const filteredCurrentAccess = selectedProductId && selectedProductId !== 'all'
-    ? currentAccess.filter(access => access.productId === selectedProductId)
+    ? currentAccess.filter(access => access.productId === selectedProductId).map(access => ({
+        ...access,
+        productName: selectedProduct?.name || access.productName
+      }))
     : currentAccess;
 
   return (
@@ -93,21 +94,21 @@ const CurrentAccessTab: React.FC<CurrentAccessTabProps> = ({ className }) => {
       {/* Product Selection */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Filter by Data Product</CardTitle>
+          <CardTitle className="text-base">Select Data Product</CardTitle>
           <CardDescription>
-            Select a specific data product to view only its current access, or leave unselected to view all access
+            Choose a specific data product to view and manage its current access permissions
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="product-filter">Data Product (Optional)</Label>
+            <Label htmlFor="product-filter">Data Product</Label>
             <Select value={selectedProductId} onValueChange={setSelectedProductId}>
               <SelectTrigger id="product-filter">
-                <SelectValue placeholder="All products (no filter)" />
+                <SelectValue placeholder="Select a data product..." />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">
-                  <span className="text-muted-foreground">All products (no filter)</span>
+                  <span className="text-muted-foreground">-- Select a product --</span>
                 </SelectItem>
                 {products.map((product) => (
                   <SelectItem key={product.id} value={product.id}>
@@ -149,16 +150,30 @@ const CurrentAccessTab: React.FC<CurrentAccessTabProps> = ({ className }) => {
         </CardContent>
       </Card>
 
-      {/* Current Access List */}
-      <CurrentAccessList
-        currentAccess={filteredCurrentAccess}
-        loading={loading}
-        error={error}
-        onRenewAccess={handleRenewAccess}
-        onBulkRenewAccess={handleBulkRenewAccess}
-        onScheduleRevocation={handleScheduleRevocation}
-        onForceRevocation={handleForceRevocation}
-      />
+      {/* Current Access List - Only show when a specific product is selected */}
+      {selectedProductId && selectedProductId !== 'all' ? (
+        <CurrentAccessList
+          currentAccess={filteredCurrentAccess}
+          loading={loading}
+          error={error}
+          onRenewAccess={handleRenewAccess}
+          onBulkRenewAccess={handleBulkRenewAccess}
+          onScheduleRevocation={handleScheduleRevocation}
+          onForceRevocation={handleForceRevocation}
+        />
+      ) : (
+        <Card>
+          <CardContent className="py-12">
+            <div className="text-center">
+              <Shield className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+              <h3 className="text-lg font-medium mb-2">Select a Data Product</h3>
+              <p className="text-muted-foreground">
+                Choose a data product from the dropdown above to view and manage its current access permissions.
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 };

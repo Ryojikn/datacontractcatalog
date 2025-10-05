@@ -356,11 +356,61 @@ export const useAdminStore = create<AdminStore>((set, get) => ({
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 600))
       
-      // Filter mock data by product ID
-      const filteredAccess = mockCurrentAccess.filter(access => access.productId === productId)
+      // Generate demo current access data for the selected product
+      const demoUsers = [
+        { id: 'user-001', name: 'Ana Costa', email: 'ana.costa@company.com' },
+        { id: 'user-002', name: 'Pedro Almeida', email: 'pedro.almeida@company.com' },
+        { id: 'user-003', name: 'Maria Silva', email: 'maria.silva@company.com' },
+        { id: 'user-004', name: 'João Santos', email: 'joao.santos@company.com' },
+        { id: 'user-005', name: 'Carla Oliveira', email: 'carla.oliveira@company.com' },
+        { id: 'user-006', name: 'Ricardo Ferreira', email: 'ricardo.ferreira@company.com' },
+        { id: 'user-007', name: 'Sofia Rodrigues', email: 'sofia.rodrigues@company.com' },
+        { id: 'user-008', name: 'Miguel Pereira', email: 'miguel.pereira@company.com' }
+      ];
+
+      const accessLevels: ('read' | 'write' | 'admin')[] = ['read', 'write', 'admin'];
+      const statuses: ('active' | 'expiring_soon' | 'scheduled_for_revocation')[] = ['active', 'expiring_soon', 'scheduled_for_revocation'];
+      
+      // Generate 3-8 random access entries for the selected product
+      const numEntries = Math.floor(Math.random() * 6) + 3; // 3 to 8 entries
+      const selectedUsers = demoUsers.slice(0, numEntries);
+      
+      const generatedAccess: CurrentAccess[] = selectedUsers.map((user, index) => {
+        const grantedDate = new Date();
+        grantedDate.setDate(grantedDate.getDate() - Math.floor(Math.random() * 90)); // 0-90 days ago
+        
+        const expiresDate = new Date(grantedDate);
+        expiresDate.setDate(expiresDate.getDate() + Math.floor(Math.random() * 180) + 30); // 30-210 days from grant
+        
+        const status = statuses[Math.floor(Math.random() * statuses.length)];
+        const accessLevel = accessLevels[Math.floor(Math.random() * accessLevels.length)];
+        
+        const access: CurrentAccess = {
+          id: `access-${productId}-${index + 1}`,
+          userId: user.id,
+          userName: user.name,
+          userEmail: user.email,
+          productId: productId,
+          productName: `Product ${productId}`, // This will be updated by the UI with actual product name
+          grantedAt: grantedDate.toISOString(),
+          expiresAt: expiresDate.toISOString(),
+          grantedBy: 'admin@company.com',
+          accessLevel: accessLevel,
+          status: status
+        };
+
+        // Add revocation scheduling for some entries
+        if (status === 'scheduled_for_revocation') {
+          const revocationDate = new Date();
+          revocationDate.setDate(revocationDate.getDate() + Math.floor(Math.random() * 14) + 1); // 1-14 days from now
+          access.revocationScheduledAt = revocationDate.toISOString();
+        }
+
+        return access;
+      });
       
       set({ 
-        currentAccess: filteredAccess,
+        currentAccess: generatedAccess,
         loading: false,
         lastRefresh: new Date().toISOString()
       })
